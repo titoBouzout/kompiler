@@ -9,4 +9,4 @@ git commit -m "update version"
 
 git push --all --prune
 
-npm update kompiler
+npm update -g kompiler
