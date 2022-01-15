@@ -9,4 +9,4 @@ git commit -m "update version"
 
 git push --all --prune
 
-npm update -g kompiler
+npm update -g https://github.com/titoBouzout/kompiler.git
