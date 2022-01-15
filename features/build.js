@@ -36,8 +36,7 @@ promise(async function build() {
 
 	modules.push(normalize(__dirname + '/../node_modules/'))
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
-	console.log('hello', process.env.AppData)
-	//modules.push('./')
+
 	let errored = false
 	function on_error(event) {
 		console.log()
