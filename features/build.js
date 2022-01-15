@@ -35,6 +35,8 @@ promise(async function build() {
 	if (await exists(project + options.folders.client)) modules.push(project + options.folders.client)
 
 	modules.push(normalize(__dirname + '/../node_modules/'))
+	modules.push(normalize(__dirname + process.env.AppData + '/npm/node_modules'))
+	console.log('hello', process.env.AppData)
 	//modules.push('./')
 	let errored = false
 	function on_error(event) {
