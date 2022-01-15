@@ -53,6 +53,7 @@ promise(async function build() {
 	for (let build of options.builds) {
 		let watcher = rollup.watch({
 			input: build.input,
+			cache: null,
 			plugins: [
 				multi(),
 				//includePaths({ paths: [...modules, project + options.folders.client, './'] }),
@@ -65,7 +66,7 @@ promise(async function build() {
 						// enable run-time checks when not in production
 						dev: !build.minified,
 						cssHash: function ({ hash, css, name, filename }) {
-							return 'c' + hash(css.replace(/\n\t/g, '').trim())
+							return 'c' + hash(css.replace(/[\s]/g, '').trim())
 						},
 						enableSourcemap: true,
 					},
