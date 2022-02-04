@@ -19,6 +19,9 @@ promise(async function build() {
 	const jsonimport = require('@rollup/plugin-json')
 	const svelte = require('rollup-plugin-svelte')
 	const includePaths = require('rollup-plugin-includepaths')
+	const cssModules = require('svelte-preprocess-cssmodules')
+	const sveltePreprocess = require('svelte-preprocess')
+	const { asMarkupPreprocessor } = require('svelte-as-markup-preprocessor')
 
 	let autorefresh = await read(compiler + 'features/autoreload-client.js')
 
@@ -53,7 +56,9 @@ promise(async function build() {
 	for (let build of options.builds) {
 		let watcher = rollup.watch({
 			input: build.input,
-			cache: null,
+			cache: false,
+			// preprocess: [asMarkupPreprocessor([sveltePreprocess()]), cssModules()],
+
 			plugins: [
 				multi(),
 				//includePaths({ paths: [...modules, project + options.folders.client, './'] }),
@@ -86,9 +91,9 @@ promise(async function build() {
 					rootDir: project,
 					dedupe: ['svelte'],
 				}),
-				commonjs({
+				/*commonjs({
 					exclude: './node_modules/**',
-				}),
+				}),*/
 				jsonimport(),
 				build.minified ? terser.terser({}) : null,
 			],
