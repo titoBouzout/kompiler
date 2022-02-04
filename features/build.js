@@ -18,10 +18,10 @@ promise(async function build() {
 	const cssimports = require('postcss-import')
 	const jsonimport = require('@rollup/plugin-json')
 	const svelte = require('rollup-plugin-svelte')
-	const includePaths = require('rollup-plugin-includepaths')
+	/*const includePaths = require('rollup-plugin-includepaths')
 	const cssModules = require('svelte-preprocess-cssmodules')
 	const sveltePreprocess = require('svelte-preprocess')
-	const { asMarkupPreprocessor } = require('svelte-as-markup-preprocessor')
+	const { asMarkupPreprocessor } = require('svelte-as-markup-preprocessor')*/
 
 	let autorefresh = await read(compiler + 'features/autoreload-client.js')
 
