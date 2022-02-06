@@ -76,7 +76,6 @@ promise(async function build() {
 						enableSourcemap: true,
 					},
 				}),
-
 				css({
 					modules: false,
 					plugins: [cssimports()],
@@ -91,9 +90,9 @@ promise(async function build() {
 					rootDir: project,
 					dedupe: ['svelte'],
 				}),
-				/*commonjs({
-					exclude: './node_modules/**',
-				}),*/
+				commonjs({
+					//exclude: './node_modules/**',
+				}),
 				jsonimport(),
 				build.minified ? terser.terser({}) : null,
 			],
