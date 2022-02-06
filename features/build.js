@@ -56,6 +56,7 @@ promise(async function build() {
 	for (let build of options.builds) {
 		let watcher = rollup.watch({
 			input: build.input,
+			experimentalCacheExpiry: 1,
 			cache: false,
 			// preprocess: [asMarkupPreprocessor([sveltePreprocess()]), cssModules()],
 
@@ -90,6 +91,7 @@ promise(async function build() {
 					rootDir: project,
 					dedupe: ['svelte'],
 				}),
+				// this is needed for component that arent es6
 				commonjs({
 					//exclude: './node_modules/**',
 				}),
