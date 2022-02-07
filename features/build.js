@@ -68,6 +68,8 @@ promise(async function build() {
 					value[0] = project + options.folders.client + 'node_modules/' + value[0]
 				else if (await exists(compiler + 'node_modules/' + value[0]))
 					value[0] = compiler + 'node_modules/' + value[0]
+				else if (await exists(compiler + 'node_modules/babel-preset-' + value[0]))
+					value[0] = compiler + 'node_modules/babel-preset-' + value[0]
 			}
 		} else {
 			babel_options.presets = []
