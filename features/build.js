@@ -70,8 +70,9 @@ promise(async function build() {
 					value[0] = compiler + 'node_modules/' + value[0]
 				else if (await exists(compiler + 'node_modules/babel-preset-' + value[0]))
 					value[0] = compiler + 'node_modules/babel-preset-' + value[0]
-				else
-					console.log(value[0], 'not found!'
+				else console.log(value[0], 'not found!')
+
+				console.log(value[0])
 			}
 		}
 
