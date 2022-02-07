@@ -55,8 +55,8 @@ promise(async function build() {
 		let babel_options = build.babel || {}
 
 		babel_options.presets = babel_options.presets || []
-		if (babel_options.presets.indexOf('babel-preset-solid') === -1) {
-			babel_options.presets.push('babel-preset-solid')
+		if (babel_options.presets.indexOf('solid') === -1) {
+			babel_options.presets.push('solid')
 		}
 
 		babel_options.babelHelpers = babel_options.babelHelpers || 'bundled'
@@ -70,12 +70,11 @@ promise(async function build() {
 					value[0] = compiler + 'node_modules/' + value[0]
 				else if (await exists(compiler + 'node_modules/babel-preset-' + value[0]))
 					value[0] = compiler + 'node_modules/babel-preset-' + value[0]
+				else
+					console.log(value[0], 'not found!'
 			}
-		} else {
-			babel_options.presets = []
 		}
 
-		console.log(compiler + 'node_modules/', babel_options.presets)
 		if (babel_options.plugins) {
 			for (let value of babel_options.plugins) {
 				if (await exists(project + 'node_modules/' + value[0]))
