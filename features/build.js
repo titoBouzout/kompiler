@@ -12,16 +12,13 @@ promise(async function build() {
 		require('@rollup/plugin-node-resolve').default || require('@rollup/plugin-node-resolve')
 	const multi = require('@rollup/plugin-multi-entry')
 	const replace = require('@rollup/plugin-replace')
+	const babel = require('@rollup/plugin-babel').default || require('@rollup/plugin-babel')
+
 	const terser = require('rollup-plugin-terser')
 	const css = require('rollup-plugin-postcss')
 	const commonjs = require('@rollup/plugin-commonjs')
 	const cssimports = require('postcss-import')
 	const jsonimport = require('@rollup/plugin-json')
-	const svelte = require('rollup-plugin-svelte')
-	/*const includePaths = require('rollup-plugin-includepaths')
-	const cssModules = require('svelte-preprocess-cssmodules')
-	const sveltePreprocess = require('svelte-preprocess')
-	const { asMarkupPreprocessor } = require('svelte-as-markup-preprocessor')*/
 
 	let autorefresh = await read(compiler + 'features/autoreload-client.js')
 
@@ -54,6 +51,36 @@ promise(async function build() {
 	}
 
 	for (let build of options.builds) {
+		let babel_options = build.babel || {}
+
+		babel_options.presets = babel_options.presets || []
+		if (babel_options.presets.indexOf('solid') === -1) {
+			babel_options.presets.push('solid')
+		}
+
+		console.log(babel_options.presets)
+		if (babel_options.presets) {
+			for (let value of babel_options.presets) {
+				if (await exists(project + 'node_modules/' + value[0]))
+					value[0] = project + 'node_modules/' + value[0]
+				else if (await exists(project + options.folders.client + 'node_modules/' + value[0]))
+					value[0] = project + options.folders.client + 'node_modules/' + value[0]
+			}
+		} else {
+			babel_options.presets = []
+		}
+
+		if (babel_options.plugins) {
+			for (let value of babel_options.plugins) {
+				if (await exists(project + 'node_modules/' + value[0]))
+					value[0] = project + 'node_modules/' + value[0]
+				else if (await exists(project + options.folders.client + 'node_modules/' + value[0]))
+					value[0] = project + options.folders.client + 'node_modules/' + value[0]
+			}
+		} else {
+			babel_options.plugins = []
+		}
+
 		let watcher = rollup.watch({
 			input: build.input,
 			experimentalCacheExpiry: 1,
@@ -67,18 +94,13 @@ promise(async function build() {
 					'process.env.NODE_ENV': JSON.stringify('production'),
 					'preventAssignment': true,
 				}),*/
-				svelte({
-					compilerOptions: {
-						// enable run-time checks when not in production
-						dev: !build.minified,
-						cssHash: function ({ hash, css, name, filename }) {
-							return 'c' + hash(css.replace(/[\s]/g, '').trim())
-						},
-						enableSourcemap: true,
-					},
+
+				babel({
+					cwd: project + options.folders.client,
+					...babel_options,
 				}),
 				css({
-					modules: false,
+					modules: true,
 					plugins: [cssimports()],
 					extract: true,
 					minimize: true,
@@ -89,7 +111,7 @@ promise(async function build() {
 					browser: true,
 					moduleDirectories: ['./', ...modules, project + options.folders.client],
 					rootDir: project,
-					dedupe: ['svelte'],
+					// dedupe: ['svelte'],
 				}),
 				// this is needed for component that arent es6
 				commonjs({
