@@ -36,6 +36,7 @@ promise(async function build() {
 
 	modules.push(normalize(__dirname + '/../node_modules/'))
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
+	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 
 	let errored = false
 	function on_error(event) {
@@ -98,7 +99,13 @@ promise(async function build() {
 					'process.env.NODE_ENV': JSON.stringify('production'),
 					'preventAssignment': true,
 				}),*/
-
+				resolve({
+					jsnext: true,
+					browser: true,
+					moduleDirectories: ['./', ...modules, project + options.folders.client],
+					rootDir: project,
+					// dedupe: ['svelte'],
+				}),
 				babel({
 					cwd: project + options.folders.client,
 					...babel_options,
@@ -110,13 +117,7 @@ promise(async function build() {
 					minimize: true,
 					sourceMap: true, //'inline',
 				}),
-				resolve({
-					jsnext: true,
-					browser: true,
-					moduleDirectories: ['./', ...modules, project + options.folders.client],
-					rootDir: project,
-					// dedupe: ['svelte'],
-				}),
+
 				// this is needed for component that arent es6
 				commonjs({
 					//exclude: './node_modules/**',
