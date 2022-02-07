@@ -58,7 +58,7 @@ promise(async function build() {
 			babel_options.presets.push('solid')
 		}
 
-		console.log(babel_options.presets)
+		babel_options.babelHelpers = babel_options.babelHelpers || 'bundled'
 		if (babel_options.presets) {
 			for (let value of babel_options.presets) {
 				if (await exists(project + 'node_modules/' + value[0]))
