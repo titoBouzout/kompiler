@@ -55,8 +55,8 @@ promise(async function build() {
 		let babel_options = build.babel || {}
 
 		babel_options.presets = babel_options.presets || []
-		if (babel_options.presets.indexOf('solid') === -1) {
-			babel_options.presets.push('solid')
+		if (babel_options.presets.indexOf('babel-preset-solid') === -1) {
+			babel_options.presets.push('babel-preset-solid')
 		}
 
 		babel_options.babelHelpers = babel_options.babelHelpers || 'bundled'
