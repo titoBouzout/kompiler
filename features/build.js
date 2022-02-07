@@ -73,6 +73,7 @@ promise(async function build() {
 			babel_options.presets = []
 		}
 
+		console.log(compiler + 'node_modules/', babel_options.presets)
 		if (babel_options.plugins) {
 			for (let value of babel_options.plugins) {
 				if (await exists(project + 'node_modules/' + value[0]))
