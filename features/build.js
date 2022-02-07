@@ -93,11 +93,9 @@ promise(async function build() {
 			input: build.input,
 			experimentalCacheExpiry: 1,
 			cache: false,
-			// preprocess: [asMarkupPreprocessor([sveltePreprocess()]), cssModules()],
 
 			plugins: [
 				multi(),
-				//includePaths({ paths: [...modules, project + options.folders.client, './'] }),
 				/*replace({
 					'process.env.NODE_ENV': JSON.stringify('production'),
 					'preventAssignment': true,
@@ -105,7 +103,7 @@ promise(async function build() {
 				resolve({
 					jsnext: true,
 					browser: true,
-					moduleDirectories: ['./', ...modules, project + options.folders.client],
+					moduleDirectories: ['./', ...modules, project + options.folders.client, compiler],
 					rootDir: project,
 					// dedupe: ['svelte'],
 				}),
