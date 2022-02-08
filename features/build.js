@@ -111,10 +111,7 @@ promise(async function build() {
 					rootDir: project,
 					// dedupe: ['svelte'],
 				}),
-				babel({
-					cwd: project + options.folders.client,
-					...babel_options,
-				}),
+
 				css({
 					modules: true,
 					plugins: [cssimports()],
@@ -122,7 +119,10 @@ promise(async function build() {
 					minimize: true,
 					sourceMap: true, //'inline',
 				}),
-
+				babel({
+					cwd: project + options.folders.client,
+					...babel_options,
+				}),
 				// this is needed for component that arent es6
 				commonjs({
 					//exclude: './node_modules/**',
