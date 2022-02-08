@@ -55,9 +55,6 @@ promise(async function build() {
 		let babel_options = build.babel || {}
 
 		babel_options.presets = babel_options.presets || []
-		if (babel_options.presets.indexOf('solid') === -1) {
-			babel_options.presets.push('solid')
-		}
 
 		babel_options.babelHelpers = babel_options.babelHelpers || 'bundled'
 		if (babel_options.presets) {
@@ -70,9 +67,6 @@ promise(async function build() {
 					value[0] = compiler + 'node_modules/' + value[0]
 				else if (await exists(compiler + 'node_modules/babel-preset-' + value[0]))
 					value[0] = compiler + 'node_modules/babel-preset-' + value[0]
-				else console.log(value[0], 'not found!')
-
-				console.log(value[0])
 			}
 		}
 
@@ -103,7 +97,7 @@ promise(async function build() {
 				resolve({
 					jsnext: true,
 					browser: true,
-					moduleDirectories: ['./', ...modules, project + options.folders.client, compiler],
+					moduleDirectories: ['./', ...modules, project + options.folders.client],
 					rootDir: project,
 					// dedupe: ['svelte'],
 				}),
