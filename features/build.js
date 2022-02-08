@@ -58,17 +58,27 @@ promise(async function build() {
 
 		babel_options.babelHelpers = babel_options.babelHelpers || 'bundled'
 		if (babel_options.presets) {
-			for (let value of babel_options.presets) {
-				if (await exists(project + 'node_modules/' + value[0]))
-					value[0] = project + 'node_modules/' + value[0]
-				else if (await exists(project + options.folders.client + 'node_modules/' + value[0]))
-					value[0] = project + options.folders.client + 'node_modules/' + value[0]
-				else if (await exists(compiler + 'node_modules/' + value[0]))
-					value[0] = compiler + 'node_modules/' + value[0]
-				else if (await exists(compiler + 'node_modules/babel-preset-' + value[0]))
-					value[0] = compiler + 'node_modules/babel-preset-' + value[0]
+			for (let i in babel_options.presets) {
+				let value = babel_options.presets[i]
+				let location = value
+				if (Array.isArray(value)) {
+					location = value[0]
+				}
+				if (await exists(project + 'node_modules/' + location))
+					location = project + 'node_modules/' + location
+				else if (await exists(project + options.folders.client + 'node_modules/' + location))
+					location = project + options.folders.client + 'node_modules/' + location
+				else if (await exists(compiler + 'node_modules/' + location))
+					location = compiler + 'node_modules/' + location
+				else if (await exists(compiler + 'node_modules/babel-preset-' + location))
+					location = compiler + 'node_modules/babel-preset-' + location
 				else {
-					console.log(value[0], 'not found')
+					console.log(location, 'not found')
+				}
+				if (Array.isArray(value)) {
+					babel_options.presets[i][0] = location
+				} else {
+					babel_options.presets[i] = location
 				}
 			}
 		}
