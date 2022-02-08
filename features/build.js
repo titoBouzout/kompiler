@@ -67,9 +67,14 @@ promise(async function build() {
 					value[0] = compiler + 'node_modules/' + value[0]
 				else if (await exists(compiler + 'node_modules/babel-preset-' + value[0]))
 					value[0] = compiler + 'node_modules/babel-preset-' + value[0]
+				else {
+					console.log(value[0], 'not found')
+				}
 			}
 		}
+		console.log(babel_options.presets)
 
+		babel_options.plugins = babel_options.plugins || []
 		if (babel_options.plugins) {
 			for (let value of babel_options.plugins) {
 				if (await exists(project + 'node_modules/' + value[0]))
@@ -79,8 +84,6 @@ promise(async function build() {
 				else if (await exists(compiler + 'node_modules/' + value[0]))
 					value[0] = compiler + 'node_modules/' + value[0]
 			}
-		} else {
-			babel_options.plugins = []
 		}
 
 		let watcher = rollup.watch({
@@ -97,7 +100,7 @@ promise(async function build() {
 				resolve({
 					jsnext: true,
 					browser: true,
-					moduleDirectories: ['./', ...modules, project + options.folders.client],
+					moduleDirectories: ['./', ...modules, project + options.folders.client, compiler],
 					rootDir: project,
 					// dedupe: ['svelte'],
 				}),
