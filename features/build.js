@@ -72,9 +72,7 @@ promise(async function build() {
 					location = compiler + 'node_modules/' + location
 				else if (await exists(compiler + 'node_modules/babel-preset-' + location))
 					location = compiler + 'node_modules/babel-preset-' + location
-				else {
-					console.log(location, 'not found')
-				}
+
 				if (Array.isArray(value)) {
 					babel_options.presets[i][0] = location
 				} else {
@@ -82,7 +80,6 @@ promise(async function build() {
 				}
 			}
 		}
-		console.log(babel_options.presets)
 
 		babel_options.plugins = babel_options.plugins || []
 		if (babel_options.plugins) {
