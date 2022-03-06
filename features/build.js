@@ -11,12 +11,13 @@ promise(async function build() {
 	const resolve =
 		require('@rollup/plugin-node-resolve').default || require('@rollup/plugin-node-resolve')
 	const multi = require('@rollup/plugin-multi-entry')
-	const replace = require('@rollup/plugin-replace')
+	// const replace = require('@rollup/plugin-replace')
 	const babel = require('@rollup/plugin-babel').default || require('@rollup/plugin-babel')
 
 	const terser = require('rollup-plugin-terser')
 	const css = require('rollup-plugin-postcss')
 	const commonjs = require('@rollup/plugin-commonjs')
+	// const cssmodules = require('postcss-modules')
 	const cssimports = require('postcss-import')
 	const jsonimport = require('@rollup/plugin-json')
 
