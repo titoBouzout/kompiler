@@ -114,7 +114,7 @@ promise(async function build() {
 				}),
 
 				css({
-					modules: true,
+					modules: build.cssmodules === false ? false : true,
 					plugins: [cssimports()],
 					extract: true,
 					minimize: true,
