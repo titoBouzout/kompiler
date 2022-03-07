@@ -10,6 +10,6 @@ promise(function serve() {
 		app.listen(options.site.port)
 		app.use(express.static(project + options.folders.client))
 
-		// browser('http://localhost:' + options.site.port)
+		browser('http://localhost:' + options.site.port)
 	}
 })
