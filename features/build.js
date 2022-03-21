@@ -96,7 +96,7 @@ promise(async function build() {
 
 		let watcher = rollup.watch({
 			input: build.input,
-			experimentalCacheExpiry: 1,
+			experimentalCacheExpiry: 0,
 			cache: false,
 
 			plugins: [
@@ -110,6 +110,7 @@ promise(async function build() {
 					browser: true,
 					moduleDirectories: ['./', ...modules, project + options.folders.client, compiler],
 					rootDir: project,
+					cache: false,
 					// dedupe: ['svelte'],
 				}),
 
@@ -123,6 +124,7 @@ promise(async function build() {
 				babel({
 					cwd: project + options.folders.client,
 					...babel_options,
+					cache: false,
 				}),
 				// this is needed for component that arent es6
 				commonjs({
