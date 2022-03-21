@@ -39,6 +39,8 @@ promise(async function build() {
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 
+	console.dir(['./', ...modules, project + options.folders.client, compiler])
+
 	let errored = false
 	function on_error(event) {
 		console.log()
