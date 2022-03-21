@@ -124,7 +124,6 @@ promise(async function build() {
 				babel({
 					cwd: project + options.folders.client,
 					...babel_options,
-					cache: false,
 				}),
 				// this is needed for component that arent es6
 				commonjs({
