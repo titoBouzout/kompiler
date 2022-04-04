@@ -1,6 +1,6 @@
 # kompiler
 
-A compiler for svelte code. Work in progress.
+A compiler for solid code. Work in progress.
 
 ## Installation
 

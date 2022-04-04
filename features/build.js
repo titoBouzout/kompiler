@@ -100,6 +100,7 @@ promise(async function build() {
 			cache: false,
 
 			plugins: [
+				//sourcemaps(),
 				multi(),
 				/*replace({
 					'process.env.NODE_ENV': JSON.stringify('production'),
@@ -130,7 +131,7 @@ promise(async function build() {
 					//exclude: './node_modules/**',
 				}),
 				jsonimport(),
-				build.minified ? terser.terser({}) : null,
+				build.minified ? terser.terser() : null,
 			],
 			context: 'window',
 			output: [
@@ -140,7 +141,7 @@ promise(async function build() {
 						return autorefresh
 					},
 					sourcemap: true, //build.sourceMap ? true : false,
-					sourcemapExcludeSources: false,
+					sourcemapExcludeSources: true,
 					format: 'iife',
 				},
 			],
