@@ -1,6 +1,6 @@
 {
 	"name": "kompiler",
-	"version": "5.48.0",
+	"version": "5.49.0",
 	"bin": {
 		"kompiler": "./index.js"
 	},
@@ -63,11 +63,16 @@
 			"allowImportExportEverywhere": false,
 			"codeFrame": false
 		},
-		"plugins": ["react"],
+		"plugins": [
+			"react"
+		],
 		"rules": {
 			"comma-dangle": "off",
 			"indent": "off",
-			"linebreak-style": ["error", "unix"],
+			"linebreak-style": [
+				"error",
+				"unix"
+			],
 			"no-cond-assign": "off",
 			"no-console": "off",
 			"no-empty": "off",
