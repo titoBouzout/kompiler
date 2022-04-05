@@ -6,7 +6,7 @@ promise(async function socket() {
 		function socketStart() {
 			const { spawn } = require('child_process')
 			let command = options.socket.es6
-				? ['-r', compiler + 'node_modules/esm/index.js', options.socket.input]
+				? ['-r', project + 'node_modules/esm/index.js', options.socket.input]
 				: [options.socket.input]
 			const socketServer = spawn('node', command)
 
