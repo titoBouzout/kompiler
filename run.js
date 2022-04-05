@@ -44,6 +44,7 @@ require('./lib/options.js').then(function () {
 	require('./features/autoupdate.js')
 	require('./features/build.js')
 	require('./features/serve.js')
+	require('./features/socket.js')
 	require('./features/autorefresh.js')
 	require('./features/optimize-images.js')
 
