@@ -36,10 +36,20 @@ promise(function serve() {
 							res.writeHead(200)
 							res.end(content)
 						} else {
-							log('404 Not Found: ' + file)
-							res.setHeader('Content-Type', 'text/plain')
-							res.writeHead(404)
-							res.end()
+							if (
+								/\/[^\.]+$/.test(file) &&
+								(await exists(project + options.folders.client + 'index.html'))
+							) {
+								file = project + options.folders.client + 'index.html'
+								res.setHeader('Content-Type', mime.lookup(file))
+								res.writeHead(200)
+								res.end(Buffer.from(await fs.promises.readFile(file)))
+							} else {
+								log('404 Not Found: ' + file)
+								res.setHeader('Content-Type', 'text/plain')
+								res.writeHead(404)
+								res.end()
+							}
 						}
 					}
 				})
