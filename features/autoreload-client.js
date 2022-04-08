@@ -5,9 +5,16 @@
 			socket.onmessage = function (m) {
 				if (m.data === 'reload') {
 					location.reload()
-				} else {
-					m = JSON.parse(m.data)
-					console.error(m.message, 'on file', m.file, 'line', m.line, '\n', m.code.trim())
+				} else if (m.data === 'reload-css') {
+					let links = document.getElementsByTagName('link')
+					for (let i = 0; i < links.length; i++) {
+						let link  =links[i]
+						if (link.getAttribute('rel') == 'stylesheet') {
+							if(link.href.indexOf('/'+location.host+'/') !== -1){
+								link.href = link.href.replace(/\.css.*$/, '.css?'+Date.now())
+							}
+						}
+					}
 				}
 			}
 			let timeout = false

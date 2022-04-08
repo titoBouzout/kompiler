@@ -182,6 +182,8 @@ promise(async function build() {
 					subtitle('Compiling ' + build.output + ' done in ' + fixed(event.duration / 1000) + 's')
 
 					event.result.close()
+					/*
+						UPDATE INDEX HTML FILE WITH HASHES
 					updateIndex.push(async function () {
 						let index = await read(project + options.folders.client + 'index.html')
 						for (let file of event.output) {
@@ -204,7 +206,7 @@ promise(async function build() {
 						//log('Wrote index.html')
 						if (updateIndex.length) updateIndex.pop()()
 					})
-					if (updateIndex.length === 1) updateIndex.pop()()
+					if (updateIndex.length === 1) updateIndex.pop()()*/
 
 					break
 				case 'BUNDLE_START':
