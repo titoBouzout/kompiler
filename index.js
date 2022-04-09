@@ -53,7 +53,6 @@ function watch(w, cb) {
 				shouldRestart &&
 				(f.indexOf(project) === -1 || f === json) &&
 				f.indexOf('.git/') === -1 &&
-				f.indexOf('node_modules/') === -1 &&
 				f.indexOf('.vscode/') === -1 &&
 				f.indexOf('.sqlite') === -1 &&
 				f.indexOf('package-lock.json') === -1
