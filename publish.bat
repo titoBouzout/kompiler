@@ -11,4 +11,3 @@ git push --all --prune
 
 call npm publish
 
-exit
