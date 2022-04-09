@@ -1,3 +1,5 @@
+on_bundle_done = () => {}
+
 promise(async function build() {
 	if (!(await exists(project + 'package.json'))) {
 		return
@@ -160,9 +162,11 @@ promise(async function build() {
 		})
 
 		let updateIndex = []
+		let refreshTimeout = false
 		watcher.on('event', async function (event) {
 			switch (event.code) {
 				case 'START':
+					clearTimeout(refreshTimeout)
 					break
 				case 'BUNDLE_END':
 					if (errored) {
@@ -210,10 +214,13 @@ promise(async function build() {
 
 					break
 				case 'BUNDLE_START':
-				case 'END':
 					break
 				case 'ERROR':
 					on_error(event.error)
+					break
+				case 'END':
+					clearTimeout(refreshTimeout)
+					refreshTimeout = setTimeout(on_bundle_done, 100)
 					break
 			}
 		})
