@@ -46,7 +46,7 @@ promise(async function socket() {
 			let hash = await hash_file(file)
 			if (hash != hashes[file]) {
 				if (file) {
-					subtitle('Restarting Socket Server:', 'changed ' + file)
+					log('Restarting Socket Server')
 				}
 				hashes[file] = hash
 				printOutPut = false
