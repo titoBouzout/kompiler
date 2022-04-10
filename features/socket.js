@@ -45,7 +45,9 @@ promise(async function socket() {
 		async function socketWatch(file) {
 			let hash = await hash_file(file)
 			if (hash != hashes[file]) {
-				if (file) console.log('Restarting Socket Server:', 'changed ' + file)
+				if (file) {
+					subtitle('Restarting Socket Server:', 'changed ' + file)
+				}
 				hashes[file] = hash
 				printOutPut = false
 				socketServer && socketServer.kill() // Stops the child process
