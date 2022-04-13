@@ -41,17 +41,35 @@ promise(async function build() {
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 
-	let errored = false
 	function on_error(event) {
 		console.log()
 		if (event.filename) warning(relative(event.filename) + '\n')
 		else if (event.loc) warning(relative(event.loc.file) + '\n')
 		else if (event.importer) warning(relative(event.importer) + '\n')
-		else console.log(event)
-		console.log(event.message)
+		else if (event.code !== 'UNRESOLVED_IMPORT') console.log(event)
+		console.error(event.message)
 		event.message && console.log()
 		event.frame && console.log(event.frame) && console.log()
-		errored = event
+
+		wss.clients.forEach(function (client) {
+			if (event.filename && event.start.line && event.message && event.frame) {
+				client.send(
+					JSON.stringify({
+						file: event.filename,
+						line: event.start.line,
+						message: event.message,
+						frame: event.frame,
+					}),
+				)
+			} else {
+				client.send(
+					JSON.stringify({
+						error: event.message,
+						frame: event.frame,
+					}),
+				)
+			}
+		})
 	}
 
 	for (let build of options.builds) {
@@ -102,7 +120,6 @@ promise(async function build() {
 			cache: false,
 
 			plugins: [
-				//sourcemaps(),
 				multi(),
 				/*replace({
 					'process.env.NODE_ENV': JSON.stringify('production'),
@@ -114,15 +131,14 @@ promise(async function build() {
 					moduleDirectories: ['./', ...modules, project + options.folders.client, compiler],
 					rootDir: project,
 					cache: false,
-					// dedupe: ['svelte'],
 				}),
 
 				css({
-					modules: build.cssmodules === false ? false : true,
+					modules: build.cssModules === false ? false : true,
 					plugins: [cssimports()],
 					extract: true,
 					minimize: true,
-					sourceMap: true, //'inline',
+					sourceMap: true,
 				}),
 				babel({
 					cwd: project + options.folders.client,
@@ -142,7 +158,7 @@ promise(async function build() {
 					intro: function () {
 						return autorefresh
 					},
-					sourcemap: true, //build.sourceMap ? true : false,
+					sourcemap: true,
 					sourcemapExcludeSources: true,
 					format: 'iife',
 				},
@@ -161,59 +177,17 @@ promise(async function build() {
 			},
 		})
 
-		let updateIndex = []
 		let refreshTimeout = false
 		watcher.on('event', async function (event) {
 			switch (event.code) {
 				case 'START':
 					clearTimeout(refreshTimeout)
 					break
-				case 'BUNDLE_END':
-					if (errored) {
-						wss.clients.forEach(function (client) {
-							if (errored.filename && errored.start.line && errored.message && errored.frame)
-								client.send(
-									JSON.stringify({
-										file: errored.filename,
-										line: errored.start.line,
-										message: errored.message,
-										code: errored.frame,
-									}),
-								)
-						})
-						errored = false
-					}
-					subtitle('Compiling ' + build.output + ' done in ' + fixed(event.duration / 1000) + 's')
-
-					event.result.close()
-					/*
-						UPDATE INDEX HTML FILE WITH HASHES
-					updateIndex.push(async function () {
-						let index = await read(project + options.folders.client + 'index.html')
-						for (let file of event.output) {
-							let hash = await hash_file(file)
-							index = index.replace(
-								new RegExp('(' + basename(file) + ')[^"\']*(["\'])'),
-								'$1?' + hash.substr(0, 12) + '$2',
-							)
-
-							let css = file.replace('.js', '.css')
-							if (await exists(css)) {
-								let hash = await hash_file(css)
-								index = index.replace(
-									new RegExp('(' + basename(css) + ')[^"\']*(["\'])'),
-									'$1?' + hash.substr(0, 12) + '$2',
-								)
-							}
-						}
-						await write(project + options.folders.client + 'index.html', index)
-						//log('Wrote index.html')
-						if (updateIndex.length) updateIndex.pop()()
-					})
-					if (updateIndex.length === 1) updateIndex.pop()()*/
-
-					break
 				case 'BUNDLE_START':
+					break
+				case 'BUNDLE_END':
+					subtitle('Compiling ' + build.output + ' done in ' + fixed(event.duration / 1000) + 's')
+					event.result.close()
 					break
 				case 'ERROR':
 					on_error(event.error)

@@ -15,7 +15,17 @@
 					}
 				} else {
 					m = JSON.parse(m.data)
-					console.error(m.message, 'on file', m.file, 'line', m.line, '\n', m.code.trim())
+					m.error
+						? console.error('Compiler Error:', m.error, m.frame || '')
+						: console.error(
+								m.message,
+								'on file',
+								m.file,
+								'line',
+								m.line,
+								'\n',
+								(m.frame || '').trim(),
+						  )
 				}
 			}
 			let timeout = false
