@@ -8,13 +8,14 @@
 				} else if (m.data === 'reload-css') {
 					let links = document.getElementsByTagName('link')
 					for (let i = 0; i < links.length; i++) {
-						let link  =links[i]
-						if (link.getAttribute('rel') == 'stylesheet') {
-							if(link.href.indexOf('/'+location.host+'/') !== -1){
-								link.href = link.href.replace(/\.css.*$/, '.css?'+Date.now())
-							}
+						let link = links[i]
+						if (link.rel === 'stylesheet' && link.href.indexOf('/' + location.host + '/') !== -1) {
+							link.href = link.href.replace(/\.css.*$/, '.css?' + Date.now())
 						}
 					}
+				} else {
+					m = JSON.parse(m.data)
+					console.error(m.message, 'on file', m.file, 'line', m.line, '\n', m.code.trim())
 				}
 			}
 			let timeout = false
