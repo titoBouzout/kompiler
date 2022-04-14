@@ -12,6 +12,7 @@ promise(async function build() {
 	const rollup = require('rollup')
 	const resolve =
 		require('@rollup/plugin-node-resolve').default || require('@rollup/plugin-node-resolve')
+	const alias = require('@rollup/plugin-alias').default || require('@rollup/plugin-alias')
 	const multi = require('@rollup/plugin-multi-entry')
 	// const replace = require('@rollup/plugin-replace')
 	const babel = require('@rollup/plugin-babel').default || require('@rollup/plugin-babel')
@@ -113,6 +114,16 @@ promise(async function build() {
 					value[0] = compiler + 'node_modules/' + value[0]
 			}
 		}
+		let aliases = []
+
+		if (await exists(project + options.folders.client + '/jsconfig.json')){
+			let jsconfig  = require(project + options.folders.client + '/jsconfig.json')
+			if(jsconfig.compilerOptions && jsconfig.compilerOptions.paths){
+				for(let key of Object.keys(jsconfig.compilerOptions.paths)){
+					aliases.push({ find:key.replace(/\*/, '').replace(/\//, ''), replacement: project + options.folders.client+jsconfig.compilerOptions.paths[key][0].replace(/\*/, '') },)
+				}
+			}
+		}
 
 		let watcher = rollup.watch({
 			input: build.input,
@@ -120,6 +131,9 @@ promise(async function build() {
 			cache: false,
 
 			plugins: [
+				alias({
+					entries: aliases,
+				}),
 				multi(),
 				/*replace({
 					'process.env.NODE_ENV': JSON.stringify('production'),

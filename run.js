@@ -31,11 +31,13 @@ compiler = normalize(__dirname) + '/'
 // options
 
 require('./lib/options.js').then(function () {
-	title(
-		'kompiler - ' +
-			(options.site && options.site.domain ? options.site.domain + ' - ' + project : project) +
-			' ',
-	)
+	setInterval(() => {
+		title(
+			'kompiler - ' +
+				(options.site && options.site.domain ? options.site.domain + ' - ' + project : project) +
+				' ',
+		)
+	}, 30000)
 
 	blue('[1] Changes - [2] Save - [3] Upload - [4] Localhost - [5] Reset')
 
