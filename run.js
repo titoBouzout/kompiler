@@ -49,4 +49,5 @@ require('./lib/options.js').then(function () {
 	require('./features/optimize-images.js')
 
 	require('./features/git-status.js')
+	require('./features/npm.js')
 })

@@ -41,6 +41,6 @@ promise(async function socket() {
 			true,
 		)
 
-		controller = socketWatch()
+		socketWatch()
 	}
 })

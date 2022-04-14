@@ -64,16 +64,11 @@
 			"allowImportExportEverywhere": false,
 			"codeFrame": false
 		},
-		"plugins": [
-			"react"
-		],
+		"plugins": ["react"],
 		"rules": {
 			"comma-dangle": "off",
 			"indent": "off",
-			"linebreak-style": [
-				"error",
-				"unix"
-			],
+			"linebreak-style": ["error", "unix"],
 			"no-cond-assign": "off",
 			"no-console": "off",
 			"no-empty": "off",
