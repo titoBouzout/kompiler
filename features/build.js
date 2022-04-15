@@ -45,6 +45,7 @@ promise(async function build() {
 	let consoleFormatting =
 		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g
 
+	let errored = ''
 	function on_error(event) {
 		console.log()
 		if (event.filename) warning(relative(event.filename) + '\n')
@@ -55,26 +56,27 @@ promise(async function build() {
 		event.message && console.log()
 		event.frame && console.log(event.frame) && console.log()
 
+		if (event.filename && event.start.line && event.message && event.frame) {
+			errored = JSON.stringify({
+				file: event.filename,
+				line: event.start.line,
+				message: (event.message || '').replace(consoleFormatting, '') || undefined,
+				frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
+			})
+		} else {
+			errored = JSON.stringify({
+				error: (event.message || '').replace(consoleFormatting, '') || undefined,
+				frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
+			})
+		}
+
 		wss.clients.forEach(function (client) {
-			if (event.filename && event.start.line && event.message && event.frame) {
-				client.send(
-					JSON.stringify({
-						file: event.filename,
-						line: event.start.line,
-						message: (event.message || '').replace(consoleFormatting, '') || undefined,
-						frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
-					}),
-				)
-			} else {
-				client.send(
-					JSON.stringify({
-						error: (event.message || '').replace(consoleFormatting, '') || undefined,
-						frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
-					}),
-				)
-			}
+			client.send(errored)
 		})
 	}
+	wss.on('connection', function connection(ws) {
+		if (errored !== '') ws.send(errored)
+	})
 
 	for (let build of options.builds) {
 		let babel_options = build.babel || {}
@@ -209,6 +211,7 @@ promise(async function build() {
 				case 'BUNDLE_START':
 					break
 				case 'BUNDLE_END':
+					errored = ''
 					subtitle('Compiling ' + build.output + ' done in ' + fixed(event.duration / 1000) + 's')
 					event.result.close()
 					break
