@@ -51,7 +51,7 @@ promise(async function build() {
 		if (event.filename) warning(relative(event.filename) + '\n')
 		else if (event.loc) warning(relative(event.loc.file) + '\n')
 		else if (event.importer) warning(relative(event.importer) + '\n')
-		else if (event.code !== 'UNRESOLVED_IMPORT') console.log(event)
+		else if (event.code !== 'UNRESOLVED_IMPORT' && event.code !== 'PLUGIN_ERROR') console.log(event)
 		console.error(event.message)
 		event.message && console.log()
 		event.frame && console.log(event.frame) && console.log()
