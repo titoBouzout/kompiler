@@ -42,6 +42,9 @@ promise(async function build() {
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 
+	let consoleFormatting =
+		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g
+
 	function on_error(event) {
 		console.log()
 		if (event.filename) warning(relative(event.filename) + '\n')
@@ -58,15 +61,15 @@ promise(async function build() {
 					JSON.stringify({
 						file: event.filename,
 						line: event.start.line,
-						message: event.message,
-						frame: event.frame,
+						message: (event.message || '').replace(consoleFormatting, '') || undefined,
+						frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
 					}),
 				)
 			} else {
 				client.send(
 					JSON.stringify({
-						error: event.message,
-						frame: event.frame,
+						error: (event.message || '').replace(consoleFormatting, '') || undefined,
+						frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
 					}),
 				)
 			}
@@ -116,11 +119,17 @@ promise(async function build() {
 		}
 		let aliases = []
 
-		if (await exists(project + options.folders.client + '/jsconfig.json')){
-			let jsconfig  = require(project + options.folders.client + '/jsconfig.json')
-			if(jsconfig.compilerOptions && jsconfig.compilerOptions.paths){
-				for(let key of Object.keys(jsconfig.compilerOptions.paths)){
-					aliases.push({ find:key.replace(/\*/, '').replace(/\//, ''), replacement: project + options.folders.client+jsconfig.compilerOptions.paths[key][0].replace(/\*/, '') },)
+		if (await exists(project + options.folders.client + '/jsconfig.json')) {
+			let jsconfig = require(project + options.folders.client + '/jsconfig.json')
+			if (jsconfig.compilerOptions && jsconfig.compilerOptions.paths) {
+				for (let key of Object.keys(jsconfig.compilerOptions.paths)) {
+					aliases.push({
+						find: key.replace(/\*/, '').replace(/\//, ''),
+						replacement:
+							project +
+							options.folders.client +
+							jsconfig.compilerOptions.paths[key][0].replace(/\*/, ''),
+					})
 				}
 			}
 		}
