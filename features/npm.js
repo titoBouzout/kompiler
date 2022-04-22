@@ -18,7 +18,7 @@ promise(async function npm() {
 			() => {
 				npmOutdated(project)
 			},
-			2000,
+			10000,
 		)
 	}
 
@@ -34,7 +34,7 @@ promise(async function npm() {
 			() => {
 				npmOutdated(project + options.folders.client)
 			},
-			2000,
+			10000,
 		)
 	}
 
@@ -50,7 +50,7 @@ promise(async function npm() {
 			() => {
 				npmOutdated(project + options.folders.server)
 			},
-			2000,
+			10000,
 		)
 	}
 })
