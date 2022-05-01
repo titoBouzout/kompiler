@@ -145,7 +145,6 @@ promise(async function build() {
 			input: build.input,
 			experimentalCacheExpiry: 0,
 			cache: false,
-
 			plugins: [
 				alias({
 					entries: aliases,
@@ -162,7 +161,6 @@ promise(async function build() {
 					rootDir: project,
 					cache: false,
 				}),
-
 				css({
 					modules: build.cssModules === false ? false : true,
 					plugins: [cssimports()],

@@ -1,5 +1,5 @@
 ;(function () {
-	if (location.hostname === 'localhost' || /^[0-9.]+$/.test(location.hostname)) {
+	if (location.hostname === 'localhost') {
 		;(function autoreload() {
 			let socket = new WebSocket('ws://localhost:' + (+location.port - 1))
 			socket.onmessage = function (m) {

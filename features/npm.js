@@ -1,8 +1,8 @@
 promise(async function npm() {
 	const { spawn } = require('child_process')
 
-	function npmOutdated(folder) {
-		spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', ['outdated'], {
+	function outdated(folder) {
+		spawn(is_windows() ? 'npm.cmd' : 'npm', ['outdated'], {
 			stdio: 'inherit',
 			cwd: folder,
 		})
@@ -10,47 +10,32 @@ promise(async function npm() {
 
 	// watch main
 
-	if (project && (await exists(project + '/package.json'))) {
-		npmOutdated(project)
-		watch(
-			'NPM',
-			project + '/package.json',
-			() => {
-				npmOutdated(project)
-			},
-			10000,
-		)
+	if (project && (await exists(project + 'package.json'))) {
+		setTimeout(function () {
+			outdated(project)
+		}, 5000)
+		watch(null, project + 'package.json', function () {
+			outdated(project)
+		})
 	}
 
 	// watch client
-	if (
-		options.folders.client &&
-		(await exists(project + options.folders.client + '/package.json'))
-	) {
-		npmOutdated(project + options.folders.client)
-		watch(
-			'NPM',
-			project + options.folders.client + '/package.json',
-			() => {
-				npmOutdated(project + options.folders.client)
-			},
-			10000,
-		)
+	if (options.folders.client && (await exists(project + options.folders.client + 'package.json'))) {
+		setTimeout(function () {
+			outdated(project + options.folders.client)
+		}, 5000)
+		watch(null, project + options.folders.client + 'package.json', function () {
+			outdated(project + options.folders.client)
+		})
 	}
 
 	// watch server
-	if (
-		options.folders.server &&
-		(await exists(project + options.folders.server + '/package.json'))
-	) {
-		npmOutdated(project + options.folders.server)
-		watch(
-			'NPM',
-			project + options.folders.server + '/package.json',
-			() => {
-				npmOutdated(project + options.folders.server)
-			},
-			10000,
-		)
+	if (options.folders.server && (await exists(project + options.folders.server + 'package.json'))) {
+		setTimeout(function () {
+			outdated(project + options.folders.server)
+		}, 5000)
+		watch(null, project + options.folders.server + 'package.json', function () {
+			outdated(project + options.folders.server)
+		})
 	}
 })

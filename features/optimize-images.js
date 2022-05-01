@@ -26,6 +26,6 @@ promise(async function optimize_images() {
 		})
 
 		subtitle('Optimize images - watching ' + project + options.folders.client)
-		watch('Optimize images', project + options.folders.client, process_image, 1000)
+		watch(null, project + options.folders.client, process_image)
 	}
 })

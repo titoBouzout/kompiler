@@ -349,7 +349,7 @@ module.exports = {
 					// open local site
 					case 5: {
 						hr(true)
-						if (process.platform == 'darwin') {
+						if (is_osx()) {
 							exec(
 								'open -a "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" http://localhost:' +
 									config.port,

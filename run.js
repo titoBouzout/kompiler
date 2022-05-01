@@ -18,7 +18,6 @@ require('./lib/exec.js')
 require('./lib/files.js')
 require('./lib/db.js')
 require('./lib/images.js')
-require('./lib/kill.js')
 require('./lib/logs.js')
 require('./lib/watch.js')
 
@@ -36,6 +35,7 @@ require('./lib/options.js').then(function () {
 		(options.site && options.site.domain ? options.site.domain + ' - ' + project : project) +
 		' '
 	title(s)
+	// npm changes the process title
 	setInterval(() => {
 		process.title = s
 	}, 30000)
