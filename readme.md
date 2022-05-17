@@ -1,6 +1,6 @@
 # kompiler
 
-A compiler for solid code. Mostly for personal use. Work in progress.
+A compiler for solid code. Mostly for personal use and for friends. Forever work in progress.
 
 ## Installation
 
@@ -9,10 +9,3 @@ A compiler for solid code. Mostly for personal use. Work in progress.
 ## Usage
 
 cd to a folder and run `kompiler`
-
-## TODO
-
-- add git add/commit/push
-- add server side installing
-- add nginx restarting
-- image optimizer needs an update
