@@ -21,7 +21,7 @@ promise(async function optimize_images() {
 		}
 
 		promises.all(function () {
-			log('Optimize images - checked ' + images + ' images in ' + enlapsed(start))
+			log('checked ' + images + ' images in ' + enlapsed(start))
 			log(processed)
 		})
 

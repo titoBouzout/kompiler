@@ -24,7 +24,7 @@ promise(async function build() {
 	const cssimports = require('postcss-import')
 	const jsonimport = require('@rollup/plugin-json')
 
-	let autorefresh = await read(compiler + 'features/autoreload-client.js')
+	const autorefresh = await read(compiler + 'lib/autoreload-client.js')
 
 	let modules = []
 

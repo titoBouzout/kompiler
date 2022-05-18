@@ -1,3 +1,7 @@
+open_in_browser = function () {
+	browser('http://localhost:' + options.site.port)
+}
+
 promise(function serve() {
 	if (options.site && options.site.port && options.folders && options.folders.client) {
 		subtitle('Serving ' + project + options.folders.client)
@@ -45,7 +49,7 @@ promise(function serve() {
 								res.writeHead(200)
 								res.end(Buffer.from(await fs.promises.readFile(file)))
 							} else {
-								log('404 Not Found: ' + file)
+								error('404 Not Found: ' + file)
 								res.setHeader('Content-Type', 'text/plain')
 								res.writeHead(404)
 								res.end()
@@ -61,6 +65,6 @@ promise(function serve() {
 			app.use(express.static(project + options.folders.client))
 		}
 
-		browser('http://localhost:' + options.site.port)
+		open_in_browser()
 	}
 })

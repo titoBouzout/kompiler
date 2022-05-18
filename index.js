@@ -11,8 +11,10 @@ require('./lib/watch.js')
 project = normalize(process.cwd()) + '/'
 compiler = normalize(__dirname) + '/'
 
-script = normalize(compiler + 'run.js')
+script = normalize(compiler + 'index-run.js')
 json = normalize(project + 'package.json')
+
+remove(project + 'norestart')
 
 watch(null, compiler, restart)
 watch(null, json, restart)
@@ -29,12 +31,15 @@ watch(null, json, restart)
 	}
 })()
 
-// restart
+// restarts
 
 let fork = false
 let message = 'Starting'
 let debug = false
-function restart(changed, action) {
+async function restart(changed, action) {
+	if (await exists(project + 'norestart')) {
+		return
+	}
 	if (debug)
 		console.log(
 			'\n\x1b[36m' +

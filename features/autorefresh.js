@@ -5,7 +5,7 @@ promise(async function autorefresh() {
 	if (options.site && options.site.port && options.folders && options.folders.client) {
 		// watch index
 		watch(null, project + options.folders.client + 'index.html', function () {
-			line('Auto refresh - index.html changed, refreshing')
+			line('Auto Refresh - index.html changed, refreshing')
 			wss.clients.forEach(function (client) {
 				client.send('reload')
 			})
@@ -28,19 +28,19 @@ promise(async function autorefresh() {
 		on_bundle_done = async function () {
 			if (reload_js) {
 				reload_js = false
-				line('Auto refresh - js changed, refreshing')
+				line('Auto Refresh - js changed, refreshing')
 				wss.clients.forEach(function (client) {
 					client.send('reload')
 				})
 			} else if (reload_css) {
 				reload_css = false
-				line('Auto refresh - css changed, hot reloading')
+				line('Auto Refresh - css changed, hot reloading')
 				wss.clients.forEach(function (client) {
 					client.send('reload-css')
 				})
 			}
 		}
 
-		subtitle('Auto refresh - watching ')
+		subtitle('Auto Refresh - watching js, css, index.html')
 	}
 })

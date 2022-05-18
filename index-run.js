@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-console.clear()
+/*console.clear()*/
 
 // setup
 
@@ -38,19 +38,21 @@ require('./lib/options.js').then(function () {
 	// npm changes the process title
 	setInterval(() => {
 		process.title = s
-	}, 30000)
+	}, 10000)
 
-	blue('[1] Changes - [2] Save - [3] Upload - [4] Localhost - [5] Reset')
+	yellow('[1] Browser - [2] Upload')
 
 	// features
 
-	require('./features/autoupdate.js')
 	require('./features/build.js')
-	require('./features/serve.js')
 	require('./features/socket.js')
+	require('./features/serve.js')
+	require('./features/autoupdate.js')
 	require('./features/autorefresh.js')
-	require('./features/optimize-images.js')
 
-	require('./features/git-status.js')
+	require('./features/git.js')
+	require('./features/optimize-images.js')
 	require('./features/npm.js')
+
+	require('./features/publish.js')
 })
