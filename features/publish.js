@@ -52,7 +52,7 @@
 					// track binary files
 					log('Track Build Folder')
 					await spawn({
-						command: 'git update-index --no-skip-worktree client/dist/*'.split(' '),
+						command: 'git update-index --no-skip-worktree client/dist/**'.split(' '),
 						callback: noop,
 						nostderr: true,
 					}).catch(noop)
@@ -92,7 +92,7 @@
 					// untrack build
 					log('Untrack Build Folder')
 					await spawn({
-						command: 'git update-index --skip-worktree client/dist/*'.split(' '),
+						command: 'git update-index --skip-worktree client/dist/**'.split(' '),
 						callback: noop,
 						nostderr: true,
 					}).catch(noop)
