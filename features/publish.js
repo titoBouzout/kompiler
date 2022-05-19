@@ -59,7 +59,7 @@
 
 					// write version to index
 					log('Write Version To Index')
-					let index = read(project + options.folders.client + 'index.html')
+					let index = await read(project + options.folders.client + 'index.html')
 					await write(
 						project + options.folders.client + 'index.html',
 						index
