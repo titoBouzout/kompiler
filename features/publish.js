@@ -7,8 +7,7 @@
 	function ask() {
 		rl.question('', async function do_action(result) {
 			ask()
-			result = +result
-			switch (result) {
+			switch (+result) {
 				// open in browser
 				case 1: {
 					open_in_browser()
