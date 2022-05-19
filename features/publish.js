@@ -63,8 +63,8 @@
 					await write(
 						project + options.folders.client + 'index.html',
 						index
-							.replace(/\.js\?["']+/g, '.js?' + version)
-							.replace(/\.css\?["']+/g, '.css?' + version),
+							.replace(/\.js\?[^"']+/g, '.js?' + version)
+							.replace(/\.css\?[^"']+/g, '.css?' + version),
 					)
 
 					// have to give a grace period for the build to finish
