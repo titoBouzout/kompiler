@@ -7,6 +7,7 @@
 	function ask() {
 		rl.question('', async function do_action(result) {
 			ask()
+			result = result.trim()
 			switch (+result) {
 				// open in browser
 				case 1: {
