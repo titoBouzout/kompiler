@@ -6,7 +6,9 @@
 
 	function ask() {
 		rl.question('', async function do_action(result) {
-			switch (+result) {
+			ask()
+			result = +result
+			switch (result) {
 				// open in browser
 				case 1: {
 					open_in_browser()
@@ -75,7 +77,7 @@
 					// commit all and push
 					log('Git Pushing')
 					await spawn({
-						command: 'git push --all'.split(' '),
+						command: 'git push server'.split(' '),
 					})
 
 					// untrack build
@@ -93,12 +95,20 @@
 
 					yellow('Site updated in ' + enlapsed(start) + ' seconds')
 					console.log()
-					ask()
 
 					break
 				}
 				default: {
-					error('Unkown action ' + result)
+					if (/^[0-9\s]+$/i.test(result)) {
+						error('Unkown action ' + result)
+					} else {
+						await spawn({
+							command: 'git add --all'.split(' '),
+						})
+						await spawn({
+							command: ['git', 'commit', '-m', '"' + result + '"'],
+						})
+					}
 				}
 			}
 		})
