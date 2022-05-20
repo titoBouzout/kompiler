@@ -73,7 +73,6 @@ promise(async function command_line() {
 
 					// track binary files
 					let dist = await list(project + options.folders.client + 'dist/')
-
 					cyan('Track Build Folder')
 					for (let file of dist)
 						await spawn({
