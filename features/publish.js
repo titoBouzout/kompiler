@@ -72,10 +72,13 @@ promise(async function command_line() {
 					)
 
 					// track binary files
+					let dist = await list(project + options.folders.client + 'dist/')
+
 					cyan('Track Build Folder')
-					await spawn({
-						command: 'git update-index --no-skip-worktree client/dist/**'.split(' '),
-					}) //.catch(noop)
+					for (let file of dist)
+						await spawn({
+							command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
+						}) //.catch(noop)
 
 					// commit add
 					cyan('Git Add/Commit Before Pushing')
@@ -88,9 +91,10 @@ promise(async function command_line() {
 
 					// untrack build
 					cyan('Untrack Build Folder')
-					await spawn({
-						command: 'git update-index --skip-worktree client/dist/**'.split(' '),
-					}) //.catch(noop)
+					for (let file of dist)
+						await spawn({
+							command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
+						}) //.catch(noop)
 
 					// commit all and push
 					cyan('Git Pushing')
