@@ -60,6 +60,7 @@ promise(async function command_line() {
 
 				on_bundle_done = async () => {
 					on_bundle_done = old_on_bundle_done
+					old_on_bundle_done()
 
 					// write version to index
 					cyan('Write Version To Index')
@@ -73,7 +74,7 @@ promise(async function command_line() {
 
 					// track binary files
 					let dist = await list(project + options.folders.client + 'dist/')
-					cyan('Track Build Folder')
+					// cyan('Track Build Folder')
 					for (let file of dist)
 						await spawn({
 							command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
@@ -89,11 +90,11 @@ promise(async function command_line() {
 					})
 
 					// untrack build
-					cyan('Untrack Build Folder')
+					/*cyan('Untrack Build Folder')
 					for (let file of dist)
 						await spawn({
 							command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
-						}) //.catch(noop)
+						}) //.catch(noop)*/
 
 					// commit all and push
 					cyan('Git Pushing')
@@ -105,7 +106,7 @@ promise(async function command_line() {
 
 					no_git_status = false
 
-					yellow('Site updated in ' + enlapsed(start) + ' seconds')
+					yellow('Site updated in ' + enlapsed(start) + ' seconds at ' + time())
 					console.log()
 				}
 
@@ -119,6 +120,7 @@ promise(async function command_line() {
 				if (/^[0-9\s]+$/i.test(result)) {
 					error('Unkown action ' + result)
 				} else if (result.trim() !== '') {
+					cyan('Git Add/Commit With Message: ' + result)
 					await spawn({
 						command: 'git add --all'.split(' '),
 					})
@@ -130,6 +132,13 @@ promise(async function command_line() {
 					})
 					await spawn({
 						command: 'git push origin master'.split(' '),
+					})
+				} else if (result.trim() === '') {
+					// commit add
+					cyan('Git Add/Commit Before Pushing')
+
+					await spawn({
+						command: 'git pull origin master'.split(' '),
 					})
 				}
 			}
