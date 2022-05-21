@@ -32,6 +32,14 @@ promise(async function command_line() {
 				// prevent compiler from restarting the compiler
 				await write('./norestart', '')
 
+				// track binary files
+				let dist = await list(project + options.folders.client + 'dist/')
+				// cyan('Track Build Folder')
+				for (let file of dist)
+					await spawn({
+						command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
+					}) //.catch(noop)
+
 				// pre update
 				cyan('Git Add/Commit Before Pull')
 				await spawn({
@@ -71,14 +79,6 @@ promise(async function command_line() {
 							.replace(/\.js\?[^"']+/g, '.js?' + version)
 							.replace(/\.css\?[^"']+/g, '.css?' + version),
 					)
-
-					// track binary files
-					let dist = await list(project + options.folders.client + 'dist/')
-					// cyan('Track Build Folder')
-					for (let file of dist)
-						await spawn({
-							command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
-						}) //.catch(noop)
 
 					// commit add
 					cyan('Git Add/Commit Before Pushing')
@@ -135,7 +135,7 @@ promise(async function command_line() {
 					})
 				} else if (result.trim() === '') {
 					// commit add
-					cyan('Git Add/Commit Before Pushing')
+					cyan('Git Pulling')
 
 					await spawn({
 						command: 'git pull origin master'.split(' '),
