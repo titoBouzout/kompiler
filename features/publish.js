@@ -121,24 +121,35 @@ promise(async function command_line() {
 					error('Unkown action ' + result)
 				} else if (result.trim() !== '') {
 					cyan('Git Add/Commit With Message: ' + result)
+
+					let dist = await list(project + options.folders.client + 'dist/')
+					// untrack build
+					for (let file of dist)
+						await spawn({
+							command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
+						}) //.catch(noop)
+
 					await spawn({
 						command: 'git add --all'.split(' '),
 					})
 					await spawn({
 						command: ['git', 'commit', '-m', '"' + result + '"'],
 					})
-					await spawn({
-						command: 'git pull origin master'.split(' '),
-					})
-					await spawn({
-						command: 'git push origin master'.split(' '),
-					})
+
+					// track
+					for (let file of dist)
+						await spawn({
+							command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
+						}) //.catch(noop)
 				} else if (result.trim() === '') {
 					// commit add
 					cyan('Git Pulling')
 
 					await spawn({
 						command: 'git pull origin master'.split(' '),
+					})
+					await spawn({
+						command: 'git push origin master'.split(' '),
 					})
 				}
 			}
