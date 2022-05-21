@@ -116,11 +116,20 @@ promise(async function command_line() {
 
 				break
 			}
+			case 3: {
+				await spawn({
+					command: 'git diff HEAD --no-color -w -- . > data/diff.diff'.split(' '),
+				}) //.
+				await spawn({
+					command: 'start data/diff.diff'.split(' '),
+				}) //.
+				break
+			}
 			default: {
 				if (/^[0-9\s]+$/i.test(result)) {
 					error('Unkown action ' + result)
 				} else if (result.trim() !== '') {
-					cyan('Git Add/Commit With Message: ' + result)
+					cyan('Git Add/Commit')
 
 					let dist = await list(project + options.folders.client + 'dist/')
 					// untrack build

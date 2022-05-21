@@ -40,7 +40,7 @@ require('./lib/options.js').then(function () {
 		process.title = s
 	}, 10000)
 
-	yellow('[1] Browser - [2] Upload')
+	yellow('[1] Browser - [2] Upload - [3] Diff')
 
 	// features
 
