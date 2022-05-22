@@ -59,6 +59,24 @@ promise(async function command_line() {
 				let version = JSON.parse(await read(project + 'package.json')).version
 				blue('v' + version)
 
+				// commit add
+				cyan('Git Add/Commit')
+				await spawn({
+					command: 'git add --all'.split(' '),
+				})
+				await spawn({
+					command: ('git commit -m "Pre ' + version + '"').split(' '),
+				})
+
+				// commit all and push
+				cyan('Git Pull')
+				await spawn({
+					command: 'git pull origin master'.split(' '),
+				})
+				await spawn({
+					command: 'git pull server master'.split(' '),
+				})
+
 				on_bundle_done = async () => {
 					on_bundle_done = old_on_bundle_done
 					old_on_bundle_done()
