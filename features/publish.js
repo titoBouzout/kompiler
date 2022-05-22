@@ -110,7 +110,7 @@ promise(async function command_line() {
 				if (/^[0-9\s]+$/i.test(result)) {
 					error('Unkown action ' + result)
 				} else if (result.trim() !== '') {
-					cyan('Git Add/Commit')
+					yellow('Git Add/Commit')
 
 					let dist = await list(project + options.folders.client + 'dist/')
 					// untrack build
@@ -135,7 +135,7 @@ promise(async function command_line() {
 					yellow('Git Add/Commit done in ' + enlapsed(start) + ' seconds at ' + time())
 				} else if (result.trim() === '') {
 					// commit add
-					cyan('Git Pull/Push')
+					yellow('Git Pull/Push')
 					await spawn({
 						command: 'git pull origin master'.split(' '),
 					})
