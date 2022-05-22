@@ -133,6 +133,7 @@ promise(async function command_line() {
 						})
 
 					yellow('Git Add/Commit done in ' + enlapsed(start) + ' seconds at ' + time())
+					console.log()
 				} else if (result.trim() === '') {
 					// commit add
 					yellow('Git Pull/Push')
@@ -144,6 +145,7 @@ promise(async function command_line() {
 					})
 
 					yellow('Git Pull/Push done in ' + enlapsed(start) + ' seconds at ' + time())
+					console.log()
 				}
 			}
 		}
