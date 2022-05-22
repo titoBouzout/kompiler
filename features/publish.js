@@ -13,6 +13,8 @@ promise(async function command_line() {
 	ask()
 
 	async function do_action(result) {
+		let start = Date.now()
+
 		result = result.trim()
 		switch (+result) {
 			// open in browser
@@ -20,10 +22,17 @@ promise(async function command_line() {
 				open_in_browser()
 				break
 			}
+			case 3: {
+				await spawn({
+					command: 'git diff HEAD --no-color -w -- . > data/diff.diff'.split(' '),
+				})
+				await spawn({
+					command: 'start data/diff.diff'.split(' '),
+				})
+				break
+			}
 			// 2 upload
 			case 2: {
-				let start = Date.now()
-
 				yellow('Update live site.. ')
 
 				no_git_status = true
@@ -38,23 +47,7 @@ promise(async function command_line() {
 				for (let file of dist)
 					await spawn({
 						command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
-					}) //.catch(noop)
-
-				// pre update
-				cyan('Git Add/Commit Before Pull')
-				await spawn({
-					command: 'git add --all'.split(' '),
-				})
-				await spawn({
-					command: 'git commit -m "Pre Update"'.split(' '),
-				})
-				cyan('Git Pull')
-				await spawn({
-					command: 'git pull server master'.split(' '),
-				})
-				await spawn({
-					command: 'git pull origin master'.split(' '),
-				})
+					})
 
 				// tell npm to bump the project version
 				cyan('Bump Version')
@@ -81,7 +74,7 @@ promise(async function command_line() {
 					)
 
 					// commit add
-					cyan('Git Add/Commit Before Pushing')
+					cyan('Git Add/Commit')
 					await spawn({
 						command: 'git add --all'.split(' '),
 					})
@@ -89,15 +82,11 @@ promise(async function command_line() {
 						command: ('git commit -m "' + version + '"').split(' '),
 					})
 
-					// untrack build
-					/*cyan('Untrack Build Folder')
-					for (let file of dist)
-						await spawn({
-							command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
-						}) //.catch(noop)*/
-
 					// commit all and push
-					cyan('Git Pushing')
+					cyan('Git Push')
+					await spawn({
+						command: 'git push origin master'.split(' '),
+					})
 					await spawn({
 						command: 'git push server master'.split(' '),
 					})
@@ -116,15 +105,7 @@ promise(async function command_line() {
 
 				break
 			}
-			case 3: {
-				await spawn({
-					command: 'git diff HEAD --no-color -w -- . > data/diff.diff'.split(' '),
-				}) //.
-				await spawn({
-					command: 'start data/diff.diff'.split(' '),
-				}) //.
-				break
-			}
+
 			default: {
 				if (/^[0-9\s]+$/i.test(result)) {
 					error('Unkown action ' + result)
@@ -136,7 +117,7 @@ promise(async function command_line() {
 					for (let file of dist)
 						await spawn({
 							command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
-						}) //.catch(noop)
+						})
 
 					await spawn({
 						command: 'git add --all'.split(' '),
@@ -149,17 +130,20 @@ promise(async function command_line() {
 					for (let file of dist)
 						await spawn({
 							command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
-						}) //.catch(noop)
+						})
+
+					yellow('Git Add/Commit done in ' + enlapsed(start) + ' seconds at ' + time())
 				} else if (result.trim() === '') {
 					// commit add
-					cyan('Git Pulling')
-
+					cyan('Git Pull/Push')
 					await spawn({
 						command: 'git pull origin master'.split(' '),
 					})
 					await spawn({
 						command: 'git push origin master'.split(' '),
 					})
+
+					yellow('Git Pull/Push done in ' + enlapsed(start) + ' seconds at ' + time())
 				}
 			}
 		}
