@@ -49,16 +49,6 @@ promise(async function command_line() {
 						command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
 					})
 
-				// tell npm to bump the project version
-				cyan('Bump Version')
-				await spawn({
-					command: 'call npm version patch --no-git-tag-version'.split(' '),
-					callback: noop,
-				})
-				// write the version so its usable on the frontend
-				let version = JSON.parse(await read(project + 'package.json')).version
-				blue('v' + version)
-
 				// commit add
 				cyan('Git Add/Commit')
 				await spawn({
@@ -76,6 +66,16 @@ promise(async function command_line() {
 				await spawn({
 					command: 'git pull server master'.split(' '),
 				})
+
+				// tell npm to bump the project version
+				cyan('Bump Version')
+				await spawn({
+					command: 'call npm version patch --no-git-tag-version'.split(' '),
+					callback: noop,
+				})
+				// write the version so its usable on the frontend
+				let version = JSON.parse(await read(project + 'package.json')).version
+				blue('v' + version)
 
 				on_bundle_done = async () => {
 					on_bundle_done = old_on_bundle_done
@@ -155,12 +155,26 @@ promise(async function command_line() {
 				} else if (result.trim() === '') {
 					// commit add
 					yellow('Git Pull/Push')
+
+					let dist = await list(project + options.folders.client + 'dist/')
+					// untrack build
+					for (let file of dist)
+						await spawn({
+							command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
+						})
+
 					await spawn({
 						command: 'git pull origin master'.split(' '),
 					})
 					await spawn({
 						command: 'git push origin master'.split(' '),
 					})
+
+					// track
+					for (let file of dist)
+						await spawn({
+							command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
+						})
 
 					yellow('Git Pull/Push done in ' + enlapsed(start) + ' seconds at ' + time())
 					console.log()
