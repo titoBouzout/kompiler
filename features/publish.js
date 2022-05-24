@@ -55,7 +55,7 @@ promise(async function command_line() {
 					command: 'git add --all'.split(' '),
 				})
 				await spawn({
-					command: ('git commit -m "Pre ' + version + '"').split(' '),
+					command: 'git commit -m "Pre Publish"'.split(' '),
 				})
 
 				// commit all and push
