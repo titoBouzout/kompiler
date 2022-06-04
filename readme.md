@@ -4,14 +4,20 @@ A compiler for solid code. Mostly for personal use and for friends. Forever work
 
 ## Installation
 
-`npm install -g kompiler`
+`npm install -g kompiler` and cd to a folder and run `kompiler`
 
-## Usage
+Alternatively you may install it locally as
 
-cd to a folder and run `kompiler`
+`npm install kompiler`
 
-## TODO
+then add to package.json
 
-- local initialization
-- logs
-- local compression
+```js
+	"scripts": {
+		"dev": "kompiler"
+	},
+```
+
+and run is as
+
+`npm run dev`

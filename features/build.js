@@ -28,18 +28,11 @@ promise(async function build() {
 
 	let modules = []
 
-	if (await exists(project + options.folders.client + 'node_modules'))
-		modules.push(project + options.folders.client + 'node_modules')
+	if (await exists(project + 'client/node_modules')) modules.push(project + 'client/node_modules')
 
 	if (await exists(project + 'node_modules')) modules.push(project + 'node_modules')
 
-	if (await exists(project + options.folders.server + 'node_modules'))
-		modules.push(project + options.folders.server + 'node_modules')
-
-	if (await exists(project + options.folders.client)) modules.push(project + options.folders.client)
-
 	modules.push(normalize(__dirname + '/../node_modules/'))
-	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 	modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 
 	let consoleFormatting =
@@ -98,8 +91,8 @@ promise(async function build() {
 				}
 				if (await exists(project + 'node_modules/' + location))
 					location = project + 'node_modules/' + location
-				else if (await exists(project + options.folders.client + 'node_modules/' + location))
-					location = project + options.folders.client + 'node_modules/' + location
+				else if (await exists(project + 'client/node_modules/' + location))
+					location = project + 'client/node_modules/' + location
 				else if (await exists(compiler + 'node_modules/' + location))
 					location = compiler + 'node_modules/' + location
 				else if (await exists(compiler + 'node_modules/babel-preset-' + location))
@@ -118,24 +111,22 @@ promise(async function build() {
 			for (let value of babel_options.plugins) {
 				if (await exists(project + 'node_modules/' + value[0]))
 					value[0] = project + 'node_modules/' + value[0]
-				else if (await exists(project + options.folders.client + 'node_modules/' + value[0]))
-					value[0] = project + options.folders.client + 'node_modules/' + value[0]
+				else if (await exists(project + 'client/node_modules/' + value[0]))
+					value[0] = project + 'client/node_modules/' + value[0]
 				else if (await exists(compiler + 'node_modules/' + value[0]))
 					value[0] = compiler + 'node_modules/' + value[0]
 			}
 		}
 		let aliases = []
 
-		if (await exists(project + options.folders.client + '/jsconfig.json')) {
-			let jsconfig = require(project + options.folders.client + '/jsconfig.json')
+		if (await exists(project + 'client/jsconfig.json')) {
+			let jsconfig = require(project + 'client/jsconfig.json')
 			if (jsconfig.compilerOptions && jsconfig.compilerOptions.paths) {
 				for (let key of Object.keys(jsconfig.compilerOptions.paths)) {
 					aliases.push({
 						find: key.replace(/\*/, '').replace(/\//, ''),
 						replacement:
-							project +
-							options.folders.client +
-							jsconfig.compilerOptions.paths[key][0].replace(/\*/, ''),
+							project + 'client/' + jsconfig.compilerOptions.paths[key][0].replace(/\*/, ''),
 					})
 				}
 			}
@@ -157,7 +148,7 @@ promise(async function build() {
 				resolve({
 					jsnext: true,
 					browser: true,
-					moduleDirectories: ['./', ...modules, project + options.folders.client, compiler],
+					moduleDirectories: ['./', ...modules, project + 'client/', compiler],
 					rootDir: project,
 					cache: false,
 				}),
@@ -169,7 +160,7 @@ promise(async function build() {
 					sourceMap: true,
 				}),
 				babel({
-					cwd: project + options.folders.client,
+					cwd: project + 'client/',
 					...babel_options,
 				}),
 				// this is needed for component that arent es6

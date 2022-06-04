@@ -2,7 +2,7 @@
 
 const childProcess = require('child_process')
 
-console.clear()
+// console.clear()
 
 require('./lib/@index.js')
 require('./lib/files.js')
@@ -17,7 +17,9 @@ json = normalize(project + 'package.json')
 remove(project + 'norestart')
 
 watch(null, compiler, restart)
-watch(null, json, restart)
+exists(json).then(function (result) {
+	if (result) watch(null, json, restart)
+})
 
 // aditional watch
 ;(async function () {

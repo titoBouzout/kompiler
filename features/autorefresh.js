@@ -1,10 +1,10 @@
 promise(async function autorefresh() {
 	const WebSocket = require('ws')
-	wss = new WebSocket.Server({ port: options.site.port - 1 })
+	wss = new WebSocket.Server({ port: options.port - 1 })
 
-	if (options.site && options.site.port && options.folders && options.folders.client) {
+	if (options.port) {
 		// watch index
-		watch(null, project + options.folders.client + 'index.html', function () {
+		watch(null, project + 'client/index.html', function () {
 			line('Auto Refresh - index.html changed, refreshing')
 			wss.clients.forEach(function (client) {
 				client.send('reload')

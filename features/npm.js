@@ -20,22 +20,22 @@ promise(async function npm() {
 	}
 
 	// watch client
-	if (options.folders.client && (await exists(project + options.folders.client + 'package.json'))) {
+	if (await exists(project + 'client/package.json')) {
 		setTimeout(function () {
-			outdated(project + options.folders.client)
+			outdated(project + 'client/')
 		}, 5000)
-		watch(null, project + options.folders.client + 'package.json', function () {
-			outdated(project + options.folders.client)
+		watch(null, project + 'client/package.json', function () {
+			outdated(project + 'client/')
 		})
 	}
 
 	// watch server
-	if (options.folders.server && (await exists(project + options.folders.server + 'package.json'))) {
+	if (await exists(project + 'socket/package.json')) {
 		setTimeout(function () {
-			outdated(project + options.folders.server)
+			outdated(project + 'socket/')
 		}, 5000)
-		watch(null, project + options.folders.server + 'package.json', function () {
-			outdated(project + options.folders.server)
+		watch(null, project + 'socket/package.json', function () {
+			outdated(project + 'socket/')
 		})
 	}
 })

@@ -17,7 +17,6 @@ require('./lib/@index.js')
 require('./lib/exec.js')
 require('./lib/files.js')
 require('./lib/db.js')
-require('./lib/images.js')
 require('./lib/logs.js')
 require('./lib/watch.js')
 
@@ -30,10 +29,7 @@ compiler = normalize(__dirname) + '/'
 // options
 
 require('./lib/options.js').then(function () {
-	let s =
-		'kompiler - ' +
-		(options.site && options.site.domain ? options.site.domain + ' - ' + project : project) +
-		' '
+	let s = 'kompiler - ' + (options.domain ? options.domain + ' - ' + project : project) + ' '
 	title(s)
 	// npm changes the process title
 	setInterval(() => {
@@ -51,7 +47,6 @@ require('./lib/options.js').then(function () {
 	require('./features/autorefresh.js')
 
 	require('./features/git.js')
-	require('./features/optimize-images.js')
 	require('./features/npm.js')
 
 	require('./features/publish.js')

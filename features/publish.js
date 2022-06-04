@@ -42,7 +42,7 @@ promise(async function command_line() {
 				await write('./norestart', '')
 
 				// track binary files
-				let dist = await list(project + options.folders.client + 'dist/')
+				let dist = await list(project + 'client/dist/')
 				// cyan('Track Build Folder')
 				for (let file of dist)
 					await spawn({
@@ -83,9 +83,9 @@ promise(async function command_line() {
 
 					// write version to index
 					cyan('Write Version To Index')
-					let index = await read(project + options.folders.client + 'index.html')
+					let index = await read(project + 'client/index.html')
 					await write(
-						project + options.folders.client + 'index.html',
+						project + 'client/index.html',
 						index
 							.replace(/\.js\?[^"']+/g, '.js?' + version)
 							.replace(/\.css\?[^"']+/g, '.css?' + version),
@@ -130,7 +130,7 @@ promise(async function command_line() {
 				} else if (result.trim() !== '') {
 					yellow('Git Add/Commit')
 
-					let dist = await list(project + options.folders.client + 'dist/')
+					let dist = await list(project + 'client/dist/')
 					// untrack build
 					for (let file of dist)
 						await spawn({
@@ -156,7 +156,7 @@ promise(async function command_line() {
 					// commit add
 					yellow('Git Pull/Push')
 
-					let dist = await list(project + options.folders.client + 'dist/')
+					let dist = await list(project + 'client/dist/')
 					// untrack build
 					for (let file of dist)
 						await spawn({
