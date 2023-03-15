@@ -24,10 +24,20 @@ promise(async function command_line() {
 			}
 			case 3: {
 				await spawn({
-					command: 'git diff HEAD --no-color -w -- . > data/diff.diff'.split(' '),
+					command: [
+						'git',
+						'diff',
+						'HEAD',
+						'--no-color',
+						'-w',
+						'--',
+						'.',
+						'>',
+						compiler + '.cache/diff.diff',
+					],
 				})
 				await spawn({
-					command: 'start data/diff.diff'.split(' '),
+					command: ['start', compiler + '.cache/diff.diff'],
 				})
 				break
 			}

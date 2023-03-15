@@ -12,9 +12,15 @@ TODO
 
 ## TODO
 
-- document options like additional watch
-- make rollup watch additional folders to restart the compiler preventing from opening a new tab each time by restarting the whole thing
-- make it compile on the server? I do not like this makes pushing slow as it has to run all the npm stuff
+- string replacement for production/development
+- use the output folder as the binary for git
+- fix client folder
+- push to all remotes
+- open in browser
+- replacement on index.html
+
+some day
+
 - document git targets origin/server
 - when an exec command fails it displays ugly messages
-- use .cache for diff files
+- make it compile on the server? I do not like this makes pushing slow as it has to run all the npm stuff

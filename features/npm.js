@@ -8,34 +8,16 @@ promise(async function npm() {
 		})
 	}
 
-	// watch main
+	// watch all folders with packages json to run npm outdated
+	let packagesJson = await find(project, 'package.json')
 
-	if (project && (await exists(project + 'package.json'))) {
+	for (let package of packagesJson) {
+		let folder = dirname(package)
 		setTimeout(function () {
-			outdated(project)
+			outdated(folder)
 		}, 5000)
-		watch(null, project + 'package.json', function () {
-			outdated(project)
-		})
-	}
-
-	// watch client
-	if (await exists(project + 'client/package.json')) {
-		setTimeout(function () {
-			outdated(project + 'client/')
-		}, 5000)
-		watch(null, project + 'client/package.json', function () {
-			outdated(project + 'client/')
-		})
-	}
-
-	// watch server
-	if (await exists(project + 'socket/package.json')) {
-		setTimeout(function () {
-			outdated(project + 'socket/')
-		}, 5000)
-		watch(null, project + 'socket/package.json', function () {
-			outdated(project + 'socket/')
+		watch(null, package, function () {
+			outdated(folder)
 		})
 	}
 })

@@ -14,13 +14,13 @@ promise(async function build() {
 		require('@rollup/plugin-node-resolve').default || require('@rollup/plugin-node-resolve')
 	const alias = require('@rollup/plugin-alias').default || require('@rollup/plugin-alias')
 	const multi = require('@rollup/plugin-multi-entry')
-	// const replace = require('@rollup/plugin-replace')
+	const replace = require('@rollup/plugin-replace')
 	const babel = require('@rollup/plugin-babel').default || require('@rollup/plugin-babel')
 
 	const terser = require('rollup-plugin-terser')
 	const css = require('rollup-plugin-postcss')
 	const commonjs = require('@rollup/plugin-commonjs')
-	// const cssmodules = require('postcss-modules')
+
 	const cssimports = require('postcss-import')
 	const jsonimport = require('@rollup/plugin-json')
 
@@ -132,6 +132,40 @@ promise(async function build() {
 			}
 		}
 
+		// watch packages json
+		let aditional = {}
+		let packagesJson = await find(project, 'package.json')
+
+		for (let package of packagesJson) {
+			aditional[package] = true
+		}
+
+		// aditional files or folders to watch
+		if (build.watch && build.watch.length) {
+			for (let fileOrFolder of build.watch) {
+				if (is_directory(fileOrFolder)) {
+					let addFiles = async function () {
+						let files = await list(fileOrFolder)
+						for (const file of files) {
+							if (
+								(file.endsWith('js') || file.endsWith('json') || file.endsWith('ts')) &&
+								file.indexOf('data/') === -1 &&
+								file.indexOf('.vscode/') === -1 &&
+								file.indexOf('.sqlite') === -1 &&
+								file.indexOf('node_modules/') === -1 &&
+								file.indexOf('.cache/') === -1
+							)
+								aditional[file] = true
+						}
+					}
+					await addFiles()
+					watch(null, fileOrFolder, addFiles, true)
+				} else {
+					aditional[fileOrFolder] = true
+				}
+			}
+		}
+
 		let watcher = rollup.watch({
 			input: build.input,
 			experimentalCacheExpiry: 0,
@@ -141,11 +175,33 @@ promise(async function build() {
 				alias({
 					entries: aliases,
 				}),
+				{
+					// watching aditional files
+					buildStart(options) {
+						for (const file of Object.keys(aditional)) this.addWatchFile(file)
+					},
+				},
 				multi(),
-				/*replace({
-					'process.env.NODE_ENV': JSON.stringify('production'),
-					'preventAssignment': true,
-				}),*/
+				replace({
+					values: {
+						'process.env.NODE_ENV': build.minified
+							? JSON.stringify('production')
+							: JSON.stringify('development'),
+						'"_DX_DEV_"': build.minified ? false : true,
+						"'_DX_DEV_'": build.minified ? false : true,
+						'"__DEV__"': build.minified ? false : true,
+						"'__DEV__'": build.minified ? false : true,
+						__DATE__: () => Date.now(),
+						__VERSION__: () => {
+							try {
+								return require(project + '/package.json').version
+							} catch (e) {
+								return 1
+							}
+						},
+					},
+					preventAssignment: true,
+				}),
 				resolve({
 					jsnext: true,
 					browser: true,
@@ -198,7 +254,7 @@ promise(async function build() {
 		})
 
 		let refreshTimeout = false
-		watcher.on('event', async function (event) {
+		watcher.on('event', function (event) {
 			switch (event.code) {
 				case 'START':
 					clearTimeout(refreshTimeout)

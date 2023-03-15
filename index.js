@@ -22,18 +22,6 @@ exists(json).then(function (result) {
 	if (result) watch(null, json, restart)
 })
 
-// aditional watch
-;(async function () {
-	if (await exists(json)) {
-		let aditional_watch = require(json)
-		if (aditional_watch && aditional_watch.kompiler && aditional_watch.kompiler.watch) {
-			for (let to_watch of aditional_watch.kompiler.watch) {
-				watch(null, to_watch, restart)
-			}
-		}
-	}
-})()
-
 // restarts
 
 let fork = false
