@@ -19,7 +19,7 @@ promise(async function node() {
 				server && server.kill && server.kill()
 				server = start()
 			}
-			watch('Restarting Node script', node.input, restart, true)
+			watch('Restarting Node script', dirname(node.input), restart, true)
 
 			if (node.watch && Array.isArray(node.watch)) {
 				for (let fileOrFolder of node.watch) {
