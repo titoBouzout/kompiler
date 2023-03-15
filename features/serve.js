@@ -7,7 +7,7 @@ open_in_browser = function () {
 
 promise(function serve() {
 	for (let build of options.builds) {
-		build.root = dirname(build.input[0]) + '/'
+		build.root = dirname(build.input[0])
 		build.port = seeded_random(1025, 65534, build.root)
 		build.page = 'http://localhost:' + build.port
 
@@ -21,7 +21,8 @@ promise(function serve() {
 			let mime = require('mime-types')
 			require('http')
 				.createServer(async function (req, res) {
-					let file = build.root + decodeURIComponent(req.url).replace(/^\//, '').replace(/\?.*/, '')
+					let file =
+						build.root + '/' + decodeURIComponent(req.url).replace(/^\//, '').replace(/\?.*/, '')
 
 					if (is_directory(file) && (await exists(file + 'index.html'))) {
 						file += 'index.html'
@@ -33,21 +34,21 @@ promise(function serve() {
 					} else {
 						if (is_directory(file)) {
 							let files = await list(file)
-							let content = '<h1>' + file.replace(build.root, '') + '</h1><hr/><ul>'
+							let content = '<h1>' + file.replace(build.root + '/', '') + '</h1><hr/><ul>'
 							for (let f of files)
 								content +=
 									'<li><a href="/' +
-									f.replace(build.root, '') +
+									f.replace(build.root + '/', '') +
 									'">' +
-									f.replace(build.root, '') +
+									f.replace(build.root + '/', '') +
 									'</a>'
 
 							res.setHeader('Content-Type', 'text/html')
 							res.writeHead(200)
 							res.end(content)
 						} else {
-							if (/\/[^\.]+$/.test(file) && (await exists(build.root + 'index.html'))) {
-								file = build.root + 'index.html'
+							if (/\/[^\.]+$/.test(file) && (await exists(build.root + '/index.html'))) {
+								file = build.root + '/index.html'
 								res.setHeader('Content-Type', mime.lookup(file))
 								res.writeHead(200)
 								res.end(Buffer.from(await fs.promises.readFile(file)))
@@ -60,7 +61,7 @@ promise(function serve() {
 						}
 					}
 				})
-				.listen(options.port)
+				.listen(build.port)
 		} else {
 			const express = require('express')
 			const app = express()
@@ -73,7 +74,7 @@ promise(function serve() {
 		build.wss = new WebSocket.Server({ port: build.port - 1 })
 
 		// watch index
-		watch(null, build.root + 'index.html', function () {
+		watch(null, build.root + '/index.html', function () {
 			line('Auto Refresh - index.html changed, refreshing')
 			build.wss.clients.forEach(function (client) {
 				client.send('reload')

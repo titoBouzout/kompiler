@@ -3,7 +3,7 @@ promise(async function autoupdates() {
 		let today = new Date().getDate()
 
 		if ((await db('auto library updates')) == today) {
-			subtitle('Auto Library Update - already checked')
+			if (options.autoupdates.length > 1) subtitle('Auto Library Update - already checked')
 			return
 		}
 		db('auto library updates', today)

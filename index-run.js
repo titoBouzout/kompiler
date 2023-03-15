@@ -43,14 +43,17 @@ require('./lib/watch.js')
 // options
 
 require('./lib/options.js').then(function () {
-	let s = 'kompiler - ' + (options.name ? options.name + ' - ' + project : project) + ' '
+	let shortcuts =
+		' [1] Diff - [2] Browser - [3] Publish - [Type + Enter] Commit - [ENTER] Pull/Push'
+	let s = 'kompiler - ' + (options.name ? options.name + ' - ' + project : project)
+
 	title(s)
 	// npm changes the process title
 	setInterval(() => {
-		process.title = s
-	}, 10000)
+		process.title = s + ' -' + shortcuts
+	}, 1000)
 
-	yellow('[1] Browser - [2] Diff - [3] Publish')
+	yellow(shortcuts)
 
 	// features
 
