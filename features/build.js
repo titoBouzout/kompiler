@@ -136,6 +136,7 @@ promise(async function build() {
 			input: build.input,
 			experimentalCacheExpiry: 0,
 			cache: false,
+			treeshake: build.minified ? true : false,
 			plugins: [
 				alias({
 					entries: aliases,
