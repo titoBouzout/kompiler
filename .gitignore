@@ -1,6 +1,4 @@
 node_modules
 package-lock.json
-db.sqlite
-db.sqlite-shm
-db.sqlite-wal
 TODO
+.cache

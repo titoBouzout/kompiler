@@ -16,15 +16,18 @@ process.on('unhandledRejection', console.error)
 require('./lib/@index.js')
 require('./lib/exec.js')
 require('./lib/files.js')
-require('./lib/db.js')
-require('./lib/logs.js')
-require('./lib/watch.js')
 
 // start
 
 args = process.argv.slice(2).join('')
 project = normalize(process.cwd()) + '/'
 compiler = normalize(__dirname) + '/'
+
+// more libs
+
+require('./lib/db.js')
+require('./lib/logs.js')
+require('./lib/watch.js')
 
 // options
 

@@ -14,6 +14,7 @@ compiler = normalize(__dirname) + '/'
 script = normalize(compiler + 'index-run.js')
 json = normalize(project + 'package.json')
 
+// prevents the compiler from restarting when bumping package.json version
 remove(project + 'norestart')
 
 watch(null, compiler, restart)
