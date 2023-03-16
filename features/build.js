@@ -169,7 +169,7 @@ promise(async function build() {
 			input: build.input,
 			/*experimentalCacheExpiry: 0,
 			cache: true,*/
-			treeshake: build.minified ? true : false,
+			treeshake: build.minified || !__IS_LOCALHOST__ ? true : false,
 			plugins: [
 				alias({
 					entries: aliases,
@@ -183,13 +183,14 @@ promise(async function build() {
 				multi(),
 				replace({
 					values: {
-						'process.env.NODE_ENV': build.minified
-							? JSON.stringify('production')
-							: JSON.stringify('development'),
-						'"_DX_DEV_"': build.minified ? false : true,
-						"'_DX_DEV_'": build.minified ? false : true,
-						'"__DEV__"': build.minified ? false : true,
-						"'__DEV__'": build.minified ? false : true,
+						'process.env.NODE_ENV':
+							build.minified || !__IS_LOCALHOST__
+								? JSON.stringify('production')
+								: JSON.stringify('development'),
+						'"_DX_DEV_"': build.minified || !__IS_LOCALHOST__ ? false : true,
+						"'_DX_DEV_'": build.minified || !__IS_LOCALHOST__ ? false : true,
+						'"__DEV__"': build.minified || !__IS_LOCALHOST__ ? false : true,
+						"'__DEV__'": build.minified || !__IS_LOCALHOST__ ? false : true,
 						"'__IS_LOCALHOST__'": __IS_LOCALHOST__ ? true : false,
 						'"__IS_LOCALHOST__"': __IS_LOCALHOST__ ? true : false,
 						__DATE__: () => Date.now(),
