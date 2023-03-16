@@ -135,7 +135,7 @@ promise(async function command_line() {
 				// tell npm to bump the project version
 				cyan('Bump Version')
 				await spawn({
-					command: 'call npm version patch -f --no-git-tag-version'.split(' '),
+					command: 'npm version patch -f --no-git-tag-version'.split(' '),
 					callback: noop,
 				})
 				// write the version so its usable on the frontend
