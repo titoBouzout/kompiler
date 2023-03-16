@@ -1,5 +1,5 @@
 on_bundle_done_notification = () => {}
-
+__IS_LOCALHOST__ = true
 promise(async function build() {
 	if (!(await exists(project + 'package.json'))) {
 		return
@@ -190,6 +190,8 @@ promise(async function build() {
 						"'_DX_DEV_'": build.minified ? false : true,
 						'"__DEV__"': build.minified ? false : true,
 						"'__DEV__'": build.minified ? false : true,
+						"'__IS_LOCALHOST__'": __IS_LOCALHOST__ ? true : false,
+						'"__IS_LOCALHOST__"': __IS_LOCALHOST__ ? true : false,
 						__DATE__: () => Date.now(),
 						__VERSION__: () => {
 							try {

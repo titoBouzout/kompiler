@@ -83,6 +83,8 @@ promise(async function command_line() {
 						}
 					}
 
+					__IS_LOCALHOST__ = true
+
 					// commit add
 					cyan('Git Add/Commit')
 					await spawn({
@@ -128,6 +130,8 @@ promise(async function command_line() {
 					yellow('Site updated in ' + enlapsed(start) + ' seconds at ' + time())
 					console.log()
 				}
+
+				__IS_LOCALHOST__ = false
 
 				// tell npm to bump the project version
 				cyan('Bump Version')
