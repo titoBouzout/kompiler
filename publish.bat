@@ -4,7 +4,7 @@ git commit -m "update"
 
 call npm version patch -f --no-git-tag-version
 
-git commit -m -a "update"
+git commit -a -m "update"
 
 git push --all --prune
 
