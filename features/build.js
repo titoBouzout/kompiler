@@ -17,7 +17,7 @@ promise(async function build() {
 	const replace = require('@rollup/plugin-replace')
 	const babel = require('@rollup/plugin-babel').default || require('@rollup/plugin-babel')
 
-	const terser = require('rollup-plugin-terser')
+	const terser = require('@rollup/plugin-terser')
 	const css = require('rollup-plugin-postcss')
 	const commonjs = require('@rollup/plugin-commonjs')
 
@@ -206,7 +206,7 @@ promise(async function build() {
 				resolve({
 					jsnext: true,
 					browser: true,
-					moduleDirectories: modules,
+					modulePaths: modules,
 					rootDir: root /*,
 					cache: false,*/,
 				}),
