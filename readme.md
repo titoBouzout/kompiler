@@ -49,5 +49,4 @@ some day
 
 - when an exec command fails it displays ugly messages
 - maybe make it compile on the server xD I dont like it because makes publishing sites slow as it has to run all the npm stuff
-- dont think this will automatically open in browser in linux
 - every configuration option should be optional, currently its possible it will error out I if something is missing

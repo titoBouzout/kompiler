@@ -32,9 +32,8 @@ promise(async function command_line() {
 						compiler + '.cache/diff.diff',
 					],
 				})
-				await spawn({
-					command: ['start', compiler + '.cache/diff.diff'],
-				})
+				await open_file(compiler + '.cache/diff.diff')
+
 				break
 			}
 			// open in browser
