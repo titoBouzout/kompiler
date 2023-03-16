@@ -10,7 +10,7 @@ TODO provide a forkeable repo to use this
 
 In package json at the key `kompiler` you may use the following options
 
-```json
+```js
 "kompiler": {
     // an array of "node scripts" to run, watch and automatically restart
     "node": [
