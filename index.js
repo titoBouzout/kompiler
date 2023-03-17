@@ -47,7 +47,10 @@ async function restart(changed, action) {
 		)
 	if (fork) {
 		fork.send('RESTART')
-		fork.kill()
+		fork.kill('SIGKILL')
+		try {
+			process.kill(fork.pid)
+		} catch (e) {}
 	}
 	fork = childProcess.fork(script, { cwd: process.cwd() })
 	fork.on('error', () => {
@@ -67,7 +70,10 @@ restart(script, 'first time')
 		try {
 			fork.exiting = true
 			fork.send('RESTART')
-			fork.kill()
+			fork.kill('SIGKILL')
+			try {
+				process.kill(fork.pid)
+			} catch (e) {}
 		} catch (e) {}
 		process.exit()
 	})
