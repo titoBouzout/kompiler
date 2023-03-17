@@ -15,20 +15,17 @@ promise(async function node() {
 				return spawn('node', command, { stdio: 'inherit' })
 			}
 
-			let timeout = false
-
-			async function restart() {
+			function kill() {
 				if (server && server.kill) {
 					server.kill('SIGKILL')
 					try {
 						process.kill(server.pid)
 					} catch (e) {}
 				}
-
-				clearTimeout(timeout)
-				timeout = setTimeout(function () {
-					server = start()
-				}, 100)
+			}
+			async function restart() {
+				kill()
+				server = start()
 			}
 
 			watch('Restarting Node script', dirname(node.input), restart, true)
@@ -40,6 +37,8 @@ promise(async function node() {
 			}
 
 			server = start()
+
+			process.on('exit', kill)
 		}
 	}
 })

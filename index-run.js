@@ -11,6 +11,14 @@ process.setMaxListeners(0)
 process.on('uncaughtException', console.error)
 process.on('unhandledRejection', console.error)
 
+// kill the process when asked
+
+process.on('message', async m => {
+	if (m === 'EXIT_QUICK') {
+		process.exit()
+	}
+})
+
 // lib
 
 require('./lib/@index.js')
