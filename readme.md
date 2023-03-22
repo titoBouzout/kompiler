@@ -29,8 +29,6 @@ In package json at the key `kompiler` you may use the following options
             "minified": false, // if output should be minified and treeshaked
             "express": false, // useful for when testing video that chrome does 206 requests, express is slow the compiler use a faster server but doesnt support 206
             "babel": { // babel config
-                "extensions": [".js", ".ts"],
-                "babelHelpers": "bundled",
                 "presets": ["solid"]
             },
             "watch": [] // in case you have a folder or file you want to watch that is outside "input" folder. Useful for developing npm packages using "npm link". It will trigger a rebuild and possible an update on the browser if anything changes
@@ -50,3 +48,4 @@ some day
 - when an exec command fails it displays ugly messages
 - maybe make it compile on the server xD I dont like it because makes publishing sites slow as it has to run all the npm stuff
 - every configuration option should be optional, currently its possible it will error out I if something is missing
+- handle merge conflicts
