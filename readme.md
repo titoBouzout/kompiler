@@ -49,3 +49,4 @@ some day
 - maybe make it compile on the server xD I dont like it because makes publishing sites slow as it has to run all the npm stuff
 - every configuration option should be optional, currently its possible it will error out I if something is missing
 - handle merge conflicts
+- npm versioning when publishing
