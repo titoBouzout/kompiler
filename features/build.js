@@ -171,26 +171,16 @@ promise(async function build() {
 			cache: true,*/
 			treeshake: build.minified || !__IS_LOCALHOST__ ? true : false,
 			plugins: [
-				alias({
-					entries: aliases,
-				}),
-				{
-					// watching aditional files
-					buildStart(options) {
-						for (const file of Object.keys(aditional)) this.addWatchFile(file)
-					},
-				},
-				multi(),
 				replace({
 					values: {
 						'process.env.NODE_ENV':
 							build.minified || !__IS_LOCALHOST__
 								? JSON.stringify('production')
 								: JSON.stringify('development'),
-						'"_DX_DEV_"': build.minified || !__IS_LOCALHOST__ ? false : true,
-						"'_DX_DEV_'": build.minified || !__IS_LOCALHOST__ ? false : true,
-						'"__DEV__"': build.minified || !__IS_LOCALHOST__ ? false : true,
-						"'__DEV__'": build.minified || !__IS_LOCALHOST__ ? false : true,
+						'"_DX_DEV_"': build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
+						"'_DX_DEV_'": build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
+						'"__DEV__"': build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
+						"'__DEV__'": build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
 						"'__IS_LOCALHOST__'": __IS_LOCALHOST__ ? true : false,
 						'"__IS_LOCALHOST__"': __IS_LOCALHOST__ ? true : false,
 						__DATE__: () => Date.now(),
@@ -203,7 +193,19 @@ promise(async function build() {
 						},
 					},
 					preventAssignment: true,
+					delimiters: ['', ''],
 				}),
+				alias({
+					entries: aliases,
+				}),
+				{
+					// watching aditional files
+					buildStart(options) {
+						for (const file of Object.keys(aditional)) this.addWatchFile(file)
+					},
+				},
+				multi(),
+
 				resolve({
 					jsnext: true,
 					browser: true,
