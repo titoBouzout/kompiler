@@ -21,6 +21,12 @@ promise(function serve() {
 			let mime = require('mime-types')
 			require('http')
 				.createServer(async function (req, res) {
+					async function serve(file) {
+						res.setHeader('Content-Type', mime.lookup(file))
+						res.writeHead(200)
+						res.end(Buffer.from(await fs.promises.readFile(file)))
+					}
+
 					let file =
 						build.root + '/' + decodeURIComponent(req.url).replace(/^\//, '').replace(/\?.*/, '')
 
@@ -28,9 +34,7 @@ promise(function serve() {
 						file += 'index.html'
 					}
 					if ((await exists(file)) && !is_directory(file)) {
-						res.setHeader('Content-Type', mime.lookup(file))
-						res.writeHead(200)
-						res.end(Buffer.from(await fs.promises.readFile(file)))
+						serve(file)
 					} else {
 						if (is_directory(file)) {
 							let files = await list(file)
@@ -47,12 +51,21 @@ promise(function serve() {
 							res.writeHead(200)
 							res.end(content)
 						} else {
-							if (/\/[^\.]+$/.test(file) && (await exists(build.root + '/index.html'))) {
+							if (
+								(/\/[^\.]+$/.test(file) || /\/[^\.]+\.html$/.test(file)) &&
+								(await exists(build.root + '/index.html'))
+							) {
 								file = build.root + '/index.html'
-								res.setHeader('Content-Type', mime.lookup(file))
-								res.writeHead(200)
-								res.end(Buffer.from(await fs.promises.readFile(file)))
+								serve(file)
 							} else {
+								if (build.map) {
+									for (const redirect of build.map) {
+										let target = file.replace(redirect[0], redirect[1])
+										if (await exists(target)) {
+											return serve(target)
+										}
+									}
+								}
 								error('404 Not Found: ' + file)
 								res.setHeader('Content-Type', 'text/plain')
 								res.writeHead(404)
