@@ -210,6 +210,8 @@ promise(async function build() {
 					modulePaths: modules,
 					rootDir: root /*,
 					cache: false,*/,
+					exportConditions: ['solid'],
+					extensions: ['.js', '.ts', '.jsx', '.tsx'],
 				}),
 				css({
 					modules: build.cssModules === false ? false : true,
@@ -220,11 +222,14 @@ promise(async function build() {
 				}),
 				babel({
 					cwd: root,
+					exclude: 'node_modules/**',
+					extensions: ['.js', '.ts', '.jsx', '.tsx'],
+					babelHelpers: 'bundled',
 					...babel_options,
 				}),
 				// this is needed for component that arent es6
 				commonjs({
-					//exclude: './node_modules/**',
+					exclude: './node_modules/**',
 				}),
 				jsonimport(),
 				build.minified ? terser.terser() : null,
