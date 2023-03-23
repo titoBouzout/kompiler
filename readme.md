@@ -55,3 +55,5 @@ some day
 - every configuration option should be optional, currently its possible it will error out I if something is missing
 - handle merge conflicts
 - npm versioning when publishing
+- treeshake is not dynamic
+- node-replace is not dynamic

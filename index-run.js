@@ -70,7 +70,7 @@ require('./lib/options.js').then(function () {
 	require('./features/node.js')
 	require('./features/autoupdate.js')
 
-	require('./features/git.js')
+	require('./features/git-status.js')
 	require('./features/npm.js')
 
 	require('./features/publish.js')

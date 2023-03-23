@@ -165,32 +165,31 @@ promise(async function build() {
 			}
 		}
 
+		let treeshake = {
+			get preset() {
+				return build.minified || !__IS_LOCALHOST__ ? 'recommended' : false
+			},
+		}
 		let watcher = rollup.watch({
 			input: build.input,
 			/*experimentalCacheExpiry: 0,
 			cache: true,*/
-			treeshake: build.minified || !__IS_LOCALHOST__ ? true : false,
+			treeshake: treeshake,
 			plugins: [
 				replace({
 					values: {
-						'process.env.NODE_ENV':
+						'process.env.NODE_ENV': () =>
 							build.minified || !__IS_LOCALHOST__
 								? JSON.stringify('production')
 								: JSON.stringify('development'),
-						'"_DX_DEV_"': build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
-						"'_DX_DEV_'": build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
-						'"__DEV__"': build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
-						"'__DEV__'": build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
-						"'__IS_LOCALHOST__'": __IS_LOCALHOST__ ? true : false,
-						'"__IS_LOCALHOST__"': __IS_LOCALHOST__ ? true : false,
-						__DATE__: () => Date.now(),
-						__VERSION__: () => {
-							try {
-								return require(project + '/package.json').version
-							} catch (e) {
-								return 1
-							}
-						},
+						'"_DX_DEV_"': () => (build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"'),
+						"'_DX_DEV_'": () => (build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"'),
+						'"__DEV__"': () => (build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"'),
+						"'__DEV__'": () => (build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"'),
+						"'__IS_LOCALHOST__'": () => (__IS_LOCALHOST__ ? true : false),
+						'"__IS_LOCALHOST__"': () => (__IS_LOCALHOST__ ? true : false),
+						'__DATE__': () => Date.now(),
+						'__VERSION__': () => JSON.parse(read_sync(project + 'package.json')).version,
 					},
 					preventAssignment: true,
 					delimiters: ['', ''],
@@ -205,7 +204,6 @@ promise(async function build() {
 					},
 				},
 				multi(),
-
 				resolve({
 					jsnext: true,
 					browser: true,
@@ -234,7 +232,7 @@ promise(async function build() {
 					exclude: './node_modules/**',
 				}),
 				jsonimport(),
-				build.minified ? terser.terser() : null,
+				build.minified || !__IS_LOCALHOST__ ? terser() : null,
 			],
 			context: 'window',
 			output: [
