@@ -18,6 +18,7 @@ promise(async function command_line() {
 			for (let file of dist)
 				await spawn({
 					command: ['git', 'checkout', 'HEAD', '"' + file + '"'],
+					callback: noop,
 				})
 		}
 	}
@@ -27,6 +28,7 @@ promise(async function command_line() {
 			for (let file of dist)
 				await spawn({
 					command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
+					callback: noop,
 				})
 		}
 	}
@@ -37,6 +39,7 @@ promise(async function command_line() {
 			for (let file of dist)
 				await spawn({
 					command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
+					callback: noop,
 				})
 		}
 	}
@@ -60,6 +63,7 @@ promise(async function command_line() {
 		await reset_binary()
 		let ret = await spawn({
 			command: ['git', 'diff', 'HEAD'],
+			callback: noop,
 		})
 
 		await untrack_binary()
@@ -128,7 +132,7 @@ promise(async function command_line() {
 				// pull
 				cyan('Git Pull')
 
-				let result = await spawn({ command: 'git remote'.split(' ') })
+				let result = await spawn({ command: 'git remote'.split(' '), callback: noop })
 				let remotes = result.stdout.trim().split('\n')
 
 				for (let remote of remotes) {
@@ -148,8 +152,9 @@ promise(async function command_line() {
 					command: 'git commit -m "Merge"'.split(' '),
 				})
 
+				cyan('Bump version')
+
 				// tell npm to bump the project version
-				cyan('Bump Version')
 				await spawn({
 					command: 'npm version patch -f --no-git-tag-version'.split(' '),
 					callback: noop,
@@ -172,8 +177,6 @@ promise(async function command_line() {
 						)
 					}
 				}
-
-				cyan('Waiting For Build')
 
 				await build_it()
 
