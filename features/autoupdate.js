@@ -1,12 +1,10 @@
 promise(async function autoupdates() {
 	if (options.autoupdates && Array.isArray(options.autoupdates)) {
-		let today = new Date().getDate()
-
-		if ((await db('auto library updates')) == today) {
+		if ((await db('auto library updates')) == today()) {
 			if (options.autoupdates.length > 1) subtitle('Auto Library Update - already checked')
 			return
 		}
-		db('auto library updates', today)
+		db('auto library updates', today())
 
 		for (let downloads of options.autoupdates) {
 			let url = String(downloads[0])
