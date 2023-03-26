@@ -57,3 +57,5 @@ some day
 - npm versioning when publishing
 - treeshake is not dynamic
 - node-replace is not dynamic
+- do not auto open in browser if we did the last 3 hours so we avoid opening in the browser so much
+- set env production automatically?
