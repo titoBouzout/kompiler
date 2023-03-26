@@ -23,6 +23,9 @@ promise(function serve() {
 				.createServer(async function (req, res) {
 					async function serve(file) {
 						res.setHeader('Content-Type', mime.lookup(file))
+						res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+						res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
+
 						res.writeHead(200)
 						res.end(Buffer.from(await fs.promises.readFile(file)))
 					}
@@ -48,6 +51,8 @@ promise(function serve() {
 									'</a>'
 
 							res.setHeader('Content-Type', 'text/html')
+							res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+							res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
 							res.writeHead(200)
 							res.end(content)
 						} else {
