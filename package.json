@@ -1,6 +1,6 @@
 {
 	"name": "kompiler",
-	"version": "7.0.129",
+	"version": "7.0.130",
 	"bin": {
 		"kompiler": "./index.js"
 	},
