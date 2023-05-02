@@ -5,7 +5,7 @@ open_in_browser = function () {
 	}
 }
 
-promise(function serve() {
+promise(async function serve() {
 	for (let build of options.builds) {
 		build.root = dirname(build.input[0])
 		build.port = seeded_random(1025, 65534, build.root)
@@ -36,6 +36,7 @@ promise(function serve() {
 					if (is_directory(file) && (await exists(file + 'index.html'))) {
 						file += 'index.html'
 					}
+
 					if ((await exists(file)) && !is_directory(file)) {
 						serve(file)
 					} else {
@@ -129,5 +130,9 @@ promise(function serve() {
 
 		subtitle('Auto Refresh - watching: js, css, index.html')
 	}
-	open_in_browser()
+
+	if ((await db('opened in browser')) !== hour()) {
+		db('opened in browser', hour())
+		open_in_browser()
+	}
 })

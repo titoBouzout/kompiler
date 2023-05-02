@@ -223,7 +223,7 @@ promise(async function build() {
 				babel({
 					cwd: root,
 					exclude: 'node_modules/**',
-					extensions: ['.js', '.ts', '.jsx', '.tsx'],
+					/*extensions: ['.js', '.ts', '.jsx', '.tsx'],*/
 					babelHelpers: 'bundled',
 					...babel_options,
 				}),
