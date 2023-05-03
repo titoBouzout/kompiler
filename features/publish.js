@@ -18,8 +18,9 @@ promise(async function command_line() {
 			for (let file of dist)
 				await spawn({
 					command: ['git', 'checkout', 'HEAD', '"' + file + '"'],
+					nostderr: true,
 					callback: noop,
-				})
+				}).catch(noop)
 		}
 	}
 	async function untrack_binary() {
@@ -28,8 +29,9 @@ promise(async function command_line() {
 			for (let file of dist)
 				await spawn({
 					command: ['git', 'update-index', '--skip-worktree', '"' + file + '"'],
+					nostderr: true,
 					callback: noop,
-				})
+				}).catch(noop)
 		}
 	}
 
@@ -39,8 +41,9 @@ promise(async function command_line() {
 			for (let file of dist)
 				await spawn({
 					command: ['git', 'update-index', '--no-skip-worktree', '"' + file + '"'],
+					nostderr: true,
 					callback: noop,
-				})
+				}).catch(noop)
 		}
 	}
 
