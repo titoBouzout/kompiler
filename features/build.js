@@ -11,7 +11,8 @@ promise(async function build() {
 
 	const rollup = require('rollup')
 	const resolve =
-		require('@rollup/plugin-node-resolve').default || require('@rollup/plugin-node-resolve')
+		require('@rollup/plugin-node-resolve').default ||
+		require('@rollup/plugin-node-resolve')
 	const alias = require('@rollup/plugin-alias').default || require('@rollup/plugin-alias')
 	const multi = require('@rollup/plugin-multi-entry')
 	const replace = require('@rollup/plugin-replace')
@@ -170,6 +171,8 @@ promise(async function build() {
 				return build.minified || !__IS_LOCALHOST__ ? 'recommended' : false
 			},
 		}
+		const extensions = ['.js', '.ts', '.jsx', '.tsx']
+
 		let watcher = rollup.watch({
 			input: build.input,
 			/*experimentalCacheExpiry: 0,
@@ -182,14 +185,18 @@ promise(async function build() {
 							build.minified || !__IS_LOCALHOST__
 								? JSON.stringify('production')
 								: JSON.stringify('development'),
-						'"_DX_DEV_"': () => (build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"'),
-						"'_DX_DEV_'": () => (build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"'),
-						'"__DEV__"': () => (build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"'),
-						"'__DEV__'": () => (build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"'),
+						'"_DX_DEV_"': () =>
+							build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
+						"'_DX_DEV_'": () =>
+							build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
+						'"__DEV__"': () =>
+							build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
+						"'__DEV__'": () =>
+							build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
 						"'__IS_LOCALHOST__'": () => (__IS_LOCALHOST__ ? true : false),
 						'"__IS_LOCALHOST__"': () => (__IS_LOCALHOST__ ? true : false),
-						'__DATE__': () => Date.now(),
-						'__VERSION__': () => JSON.parse(read_sync(project + 'package.json')).version,
+						__DATE__: () => Date.now(),
+						__VERSION__: () => JSON.parse(read_sync(project + 'package.json')).version,
 					},
 					preventAssignment: true,
 					delimiters: ['', ''],
@@ -211,7 +218,7 @@ promise(async function build() {
 					rootDir: root /*,
 					cache: false,*/,
 					exportConditions: ['solid'],
-					extensions: ['.js', '.ts', '.jsx', '.tsx'],
+					extensions,
 				}),
 				css({
 					modules: build.cssModules === false ? false : true,
@@ -223,7 +230,7 @@ promise(async function build() {
 				babel({
 					cwd: root,
 					exclude: 'node_modules/**',
-					/*extensions: ['.js', '.ts', '.jsx', '.tsx'],*/
+					extensions,
 					babelHelpers: 'bundled',
 					...babel_options,
 				}),
@@ -271,7 +278,13 @@ promise(async function build() {
 					break
 				case 'BUNDLE_END':
 					errored = ''
-					subtitle('Compiling ' + build.output + ' done in ' + fixed(event.duration / 1000) + 's')
+					subtitle(
+						'Compiling ' +
+							build.output +
+							' done in ' +
+							fixed(event.duration / 1000) +
+							's',
+					)
 					event.result.close()
 					break
 				case 'ERROR':

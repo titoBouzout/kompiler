@@ -28,16 +28,18 @@
 		"ws": "^8.13.0"
 	},
 	"prettier": {
-		"printWidth": 100,
+		"printWidth": 90,
 		"useTabs": true,
 		"semi": false,
 		"singleQuote": true,
+		"quoteProps": "as-needed",
 		"jsxSingleQuote": false,
 		"trailingComma": "all",
 		"bracketSpacing": true,
-		"jsxBracketSameLine": false,
+		"bracketSameLine": false,
 		"arrowParens": "avoid",
-		"quoteProps": "preserve",
-		"proseWrap": "preserve"
+
+		"proseWrap": "never",
+		"endOfLine": "lf"
 	}
 }

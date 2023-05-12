@@ -1,6 +1,7 @@
 # kompiler
 
-A framework agnostic compiler/transpiler currently used mostly for solidjs projects. For personal use and for friends. Forever work in progress.
+A framework agnostic compiler/transpiler currently used mostly for solidjs projects. For
+personal use and for friends. Forever work in progress.
 
 ## Usage
 
@@ -51,10 +52,13 @@ In package json at the key `kompiler` you may use the following options
 some day
 
 - when an exec command fails it displays ugly messages
-- maybe make it compile on the server xD I dont like it because makes publishing sites slow as it has to run all the npm stuff
-- every configuration option should be optional, currently its possible it will error out I if something is missing
+- maybe make it compile on the server xD I dont like it because makes publishing sites
+  slow as it has to run all the npm stuff
+- every configuration option should be optional, currently its possible it will error out
+  I if something is missing
 - handle merge conflicts
 - npm versioning when publishing
 - treeshake is not dynamic
 - node-replace is not dynamic
 - set env production automatically?
+- make export conditions customizable
