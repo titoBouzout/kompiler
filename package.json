@@ -1,6 +1,6 @@
 {
 	"name": "kompiler",
-	"version": "7.0.131",
+	"version": "7.0.132",
 	"bin": {
 		"kompiler": "./index.js"
 	},
@@ -38,7 +38,6 @@
 		"bracketSpacing": true,
 		"bracketSameLine": false,
 		"arrowParens": "avoid",
-
 		"proseWrap": "never",
 		"endOfLine": "lf"
 	}
