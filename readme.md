@@ -1,17 +1,13 @@
 # kompiler
 
-A framework agnostic compiler/transpiler currently used mostly for solidjs projects. For
-personal use and for friends. Forever work in progress.
-
-## Usage
-
-TODO provide a forkeable repo to use this
+A framework agnostic compiler/transpiler. For personal use and for friends. Forever work
+in progress.
 
 ## Options
 
 In package json at the key `kompiler` you may use the following options
 
-```json
+```
 {
   "kompiler": {
     // an array of "node scripts" to run, watch and automatically restart
@@ -22,14 +18,24 @@ In package json at the key `kompiler` you may use the following options
         "watch": [] // in case you have a folder or file you want to watch that is outside "input" folder to restart the script. Useful for developing npm packages using "npm link"
       }
     ],
-
+    "map": [
+      // for mapping paths served by the static server
+      ["S:/www/aa/client/npm/package/", "S:/www/npm/package/"]
+    ],
     // similar to node property is for running rollup, as many as you want
     "builds": [
       {
         "input": ["client/index.js"], // input file to process, a "static file server" is fired on this folder
+        // to use in place of "input" for using dynamic imports
+        "dir": "dist/", // use for dynamic imports, multi-entry.js should be included in the html
         "output": "client/dist/index.m.js", // where to put the output
+        // "root": "./", // if you place to serve a diferent directory than the dirname of input set this
         "minified": false, // if output should be minified and treeshaked
         "express": false, // useful for when testing video that chrome does 206 requests, express is slow the compiler use a faster server but doesnt support 206
+        "root": "./", // server document root
+        // for opening a special page when loading the server
+        "page": "index.kompiler.html",
+
         "babel": {
           // babel config
           "presets": ["solid"]
@@ -49,13 +55,7 @@ In package json at the key `kompiler` you may use the following options
 
 ## TODO
 
-some day
-
 - when an exec command fails it displays ugly messages
-- maybe make it compile on the server xD I dont like it because makes publishing sites
-  slow as it has to run all the npm stuff
-- every configuration option should be optional, currently its possible it will error out
-  I if something is missing
 - handle merge conflicts
 - npm versioning when publishing
 - treeshake is not dynamic
