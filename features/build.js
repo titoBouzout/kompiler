@@ -33,6 +33,8 @@ promise(async function build() {
 	// for notifying bundles are done
 	let refreshTimeoutAll = false
 
+	const circular = {}
+
 	for (let build of options.builds) {
 		// modules
 
@@ -46,19 +48,31 @@ promise(async function build() {
 		if (await exists(process.env.AppData + '/npm/node_modules'))
 			modules.push(normalize(process.env.AppData + '/npm/node_modules'))
 
+		modules.push('./node_modules')
+
 		// handle error messages
 		let errored = ''
 		function on_error(event) {
-			console.log()
 			if (event.filename) warning(relative(event.filename) + '\n')
 			else if (event.loc) warning(relative(event.loc.file) + '\n')
 			else if (event.importer) warning(relative(event.importer) + '\n')
-			else if (
+			else if (event.code === 'CIRCULAR_DEPENDENCY') {
+				const key = JSON.stringify(event.ids)
+				if (!circular[key]) {
+					circular[key] = true
+					console.warn('CIRCULAR_DEPENDENCY', event.ids)
+				}
+				return
+			} else if (
 				event.code !== 'UNRESOLVED_IMPORT' &&
 				event.code !== 'PLUGIN_ERROR' &&
 				event.code !== 'ENOENT'
-			)
+			) {
+				console.log()
 				console.log(event)
+			} else {
+				console.log()
+			}
 			error(event.message)
 			event.message && console.log()
 			event.frame && console.log(event.frame) && console.log()
@@ -77,16 +91,18 @@ promise(async function build() {
 				})
 			}
 
-			build.wss.clients.forEach(function (client) {
-				client.send(errored)
-			})
+			if (build.wss)
+				build.wss.clients.forEach(function (client) {
+					client.send(errored)
+				})
 		}
-		build.wss.on('connection', function connection(ws) {
-			if (errored !== '') ws.send(errored)
-		})
+		if (build.wss)
+			build.wss.on('connection', function connection(ws) {
+				if (errored !== '') ws.send(errored)
+			})
 
 		// building
-		let babel_options = build.babel || {}
+		let babel_options = build.babel || options.babel || {}
 
 		babel_options.presets = babel_options.presets || []
 
@@ -141,8 +157,9 @@ promise(async function build() {
 		}
 
 		// aditional files or folders to watch
-		if (build.watch && build.watch.length) {
-			for (let fileOrFolder of build.watch) {
+		const toWatch = build.watch || options.watch
+		if (toWatch && toWatch.length) {
+			for (let fileOrFolder of toWatch) {
 				if (is_directory(fileOrFolder)) {
 					let addFiles = async function () {
 						let files = await list(fileOrFolder)
@@ -166,18 +183,15 @@ promise(async function build() {
 			}
 		}
 
-		let treeshake = {
-			get preset() {
-				return build.minified || !__IS_LOCALHOST__ ? 'recommended' : false
-			},
-		}
 		const extensions = ['.js', '.ts', '.jsx', '.tsx']
 
 		let watcher = rollup.watch({
 			input: build.input,
 			/*experimentalCacheExpiry: 0,
 			cache: true,*/
-			treeshake: treeshake,
+			/*cache: false,*/
+			treeshake: build.treeshake === undefined ? 'recommended' : build.treeshake,
+			// IT BREAKS SOURCEMAPS! preserveSymlinks: true,
 			plugins: [
 				replace({
 					values: {
@@ -193,8 +207,8 @@ promise(async function build() {
 							build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
 						"'__DEV__'": () =>
 							build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
-						"'__IS_LOCALHOST__'": () => (__IS_LOCALHOST__ ? true : false),
-						'"__IS_LOCALHOST__"': () => (__IS_LOCALHOST__ ? true : false),
+						"'__IS_LOCALHOST__'": !build.minified ? true : false,
+						'"__IS_LOCALHOST__"': !build.minified ? true : false,
 						__DATE__: () => Date.now(),
 						__VERSION__: () => JSON.parse(read_sync(project + 'package.json')).version,
 					},
@@ -212,13 +226,13 @@ promise(async function build() {
 				},
 				multi(),
 				resolve({
-					jsnext: true,
 					browser: true,
 					modulePaths: modules,
-					rootDir: root /*,
-					cache: false,*/,
-					exportConditions: ['solid'],
+					rootDir: root,
+					// dedupe: ['solid'],
+					// 	exportConditions: ['solid'],
 					extensions,
+					// IT BREAKS SOURCEMAPS! preserveSymlinks: true,
 				}),
 				css({
 					modules: build.cssModules === false ? false : true,
@@ -228,15 +242,18 @@ promise(async function build() {
 					sourceMap: true,
 				}),
 				babel({
-					cwd: root,
-					exclude: 'node_modules/**',
+					// cwd: project,
+
+					// cwd: project ,
+					// exclude: 'node_modules/**',
+					// include: ['./*'],
 					extensions,
 					babelHelpers: 'bundled',
 					...babel_options,
 				}),
 				// this is needed for component that arent es6
 				commonjs({
-					exclude: './node_modules/**',
+					// exclude: './node_modules/**',
 				}),
 				jsonimport(),
 				build.minified || !__IS_LOCALHOST__ ? terser() : null,
@@ -244,17 +261,20 @@ promise(async function build() {
 			context: 'window',
 			output: [
 				{
-					file: build.output,
+					file: build.dir ? undefined : build.output,
+					dir: build.dir,
 					intro: function () {
 						return autorefresh
 					},
 					sourcemap: true,
 					sourcemapExcludeSources: true,
-					format: 'iife',
+					format: 'iife', // 'es', // 'iife',
 				},
 			],
 			onwarn: function (event) {
 				switch (event.code) {
+					case 'xxxx':
+					// case 'CIRCULAR_DEPENDENCY':
 					case 'EMPTY_BUNDLE':
 					case 'FILE_NAME_CONFLICT':
 					case 'MISSING_NAME_OPTION_FOR_IIFE_EXPORT':
@@ -278,6 +298,7 @@ promise(async function build() {
 					break
 				case 'BUNDLE_END':
 					errored = ''
+					erroredDuplicates = {}
 					subtitle(
 						'Compiling ' +
 							build.output +
