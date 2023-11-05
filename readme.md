@@ -35,7 +35,7 @@ In package json at the key `kompiler` you may use the following options
         "root": "./", // server document root
         // for opening a special page when loading the server
         "page": "index.kompiler.html",
-
+        "hostname":"localhost",
         "babel": {
           // babel config
           "presets": ["solid"]

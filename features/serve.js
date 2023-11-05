@@ -13,7 +13,7 @@ promise(async function serve() {
 
 			build.root = build.root ? normalize(build.root) : dirname(build.input[0])
 			build.port = seeded_random(1025, 65534, build.root)
-			const host = 'http://localhost:' + build.port
+			const host = 'http://' + (build.hostname || 'localhost') + ':' + build.port
 			const page = build.page ? host + '/' + build.page : host
 			if (!build.page) build.page = 'index.html'
 			pages.push(page)
