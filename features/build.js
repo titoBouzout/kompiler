@@ -53,6 +53,8 @@ promise(async function build() {
 		// handle error messages
 		let errored = ''
 		function on_error(event) {
+			// console.log(event)
+
 			if (event.filename) warning(relative(event.filename) + '\n')
 			else if (event.loc) warning(relative(event.loc.file) + '\n')
 			else if (event.importer) warning(relative(event.importer) + '\n')
@@ -63,15 +65,6 @@ promise(async function build() {
 					console.warn('CIRCULAR_DEPENDENCY', event.ids)
 				}
 				return
-			} else if (
-				event.code !== 'UNRESOLVED_IMPORT' &&
-				event.code !== 'PLUGIN_ERROR' &&
-				event.code !== 'ENOENT'
-			) {
-				console.log()
-				console.log(event)
-			} else {
-				console.log()
 			}
 			error(event.message)
 			event.message && console.log()
@@ -185,11 +178,12 @@ promise(async function build() {
 
 		const extensions = ['.js', '.ts', '.jsx', '.tsx']
 
+		const isMulti = !/\/[^\/]+\.[^\/]+$/.test(build.output)
+
 		let watcher = rollup.watch({
 			input: build.input,
 			/*experimentalCacheExpiry: 0,
 			cache: true,*/
-			/*cache: false,*/
 			treeshake: build.treeshake === undefined ? 'recommended' : build.treeshake,
 			// IT BREAKS SOURCEMAPS! preserveSymlinks: true,
 			plugins: [
@@ -247,30 +241,35 @@ promise(async function build() {
 					// cwd: project ,
 					// exclude: 'node_modules/**',
 					// include: ['./*'],
+					compact: false,
 					extensions,
 					babelHelpers: 'bundled',
 					...babel_options,
 				}),
 				// this is needed for component that arent es6
-				commonjs({
-					// exclude: './node_modules/**',
-				}),
+				//commonjs({
+				// exclude: './node_modules/**',
+				//}),
 				jsonimport(),
 				build.minified || !__IS_LOCALHOST__ ? terser() : null,
 			],
 			context: 'window',
 			output: [
 				{
-					file: build.dir ? undefined : build.output,
-					dir: build.dir,
+					file: !isMulti ? build.output : undefined,
+					dir: isMulti ? build.output : undefined,
 					intro: function () {
 						return autorefresh
 					},
 					sourcemap: true,
 					sourcemapExcludeSources: true,
-					format: 'iife', // 'es', // 'iife',
+					format: isMulti ? 'es' : build.format || 'iife',
+					entryFileNames: `entry/[name].[ext]`,
+					chunkFileNames: `chunk/[name].js`,
+					assetFileNames: `asset/[name].[ext]`,
 				},
 			],
+
 			onwarn: function (event) {
 				switch (event.code) {
 					case 'xxxx':
@@ -285,6 +284,8 @@ promise(async function build() {
 					}
 				}
 			},
+
+			...build.rollup,
 		})
 
 		let refreshTimeout = false
