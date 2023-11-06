@@ -30,21 +30,22 @@ promise(async function serve() {
 						// dinamic imports require strict mime type
 						case 'application/jsx':
 						case 'text/jsx':
+						case 'application/javascript':
+						case 'text/javascript':
 							return 'application/javascript; charset=utf-8'
 
-						case 'text/html':
-						case 'text/css':
-
-						case 'application/javascript':
 						case 'application/json':
-
-						case 'text/javascript':
 						case 'text/json':
 
+						case 'text/html':
+						case 'text/xml':
+						case 'text/css':
+
 						case 'text/plain':
+						case 'image/svg+xml':
 							return mime + '; charset=utf-8'
 						default:
-							return ''
+							return mime
 					}
 				}
 
