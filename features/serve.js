@@ -27,19 +27,22 @@ promise(async function serve() {
 
 				function contentType(mime) {
 					switch (mime) {
+						// dinamic imports require strict mime type
+						case 'application/jsx':
+						case 'text/jsx':
+							return 'application/javascript; charset=utf-8'
+
 						case 'text/html':
 						case 'text/css':
 
 						case 'application/javascript':
 						case 'application/json':
-						case 'application/jsx':
 
 						case 'text/javascript':
 						case 'text/json':
-						case 'text/jsx':
 
 						case 'text/plain':
-							return '; charset=utf-8'
+							return mime + '; charset=utf-8'
 						default:
 							return ''
 					}
@@ -57,7 +60,7 @@ promise(async function serve() {
 					.createServer(async function (req, res) {
 						async function serve(file) {
 							let mimeType = mime.lookup(file)
-							res.setHeader('Content-Type', mimeType + contentType(mimeType))
+							res.setHeader('Content-Type', contentType(mimeType))
 							// res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
 							// res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
 
@@ -120,7 +123,7 @@ promise(async function serve() {
 							}
 						}
 					})
-					.listen(build.port)
+					.listen({ host: '127.0.0.1', port: build.port })
 			} else {
 				const express = require('express')
 				const app = express()
@@ -130,7 +133,7 @@ promise(async function serve() {
 
 			// AUTO REFRESH
 			const WebSocket = require('ws')
-			build.wss = new WebSocket.Server({ port: build.port - 1 })
+			build.wss = new WebSocket.Server({ host: '127.0.0.1', port: build.port - 1 })
 
 			// watch index
 			if (await exists(build.root + '/' + build.page)) {
