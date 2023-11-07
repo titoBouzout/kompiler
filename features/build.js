@@ -247,9 +247,10 @@ promise(async function build() {
 					...babel_options,
 				}),
 				// this is needed for component that arent es6
-				//commonjs({
-				// exclude: './node_modules/**',
-				//}),
+				// module interoperability
+				commonjs({
+					exclude: './node_modules/**',
+				}),
 				jsonimport(),
 				build.minified || !__IS_LOCALHOST__ ? terser() : null,
 			],
