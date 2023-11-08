@@ -12,6 +12,10 @@ In package.json at the key `kompiler` you may use the following options
 
 {
   "kompiler": {
+    // enviroment
+    "env": {
+      "NODE_ENV": "development/production"
+    },
     // an array of "node scripts" to run, watch, and automatically restart
     "node": [
       {
