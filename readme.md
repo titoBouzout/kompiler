@@ -22,7 +22,7 @@ In package.json at the key `kompiler` you may use the following options
         // the dirname of "input" is automatically watched for restarting the node script
         "input": "socket/index.js",
         // for old node versions, to use "esm" (require vs imports)
-        "legacyToEs6": true,
+        "legacyToEs6": false, // defaults to false
         // in case you have a folder or file you want to watch that is outside "input" folder to restart the script. Useful for developing npm packages using "npm link"
         "watch": []
       }
