@@ -20,7 +20,7 @@ promise(function git() {
 		}
 	}
 
-	status()
+	// status()
 
 	// watch(null, project, status, true)
 })
