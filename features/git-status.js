@@ -20,7 +20,9 @@ promise(function git() {
 		}
 	}
 
-	// status()
+	if (options.git) {
+		status()
 
-	// watch(null, project, status, true)
+		watch(null, project, status, true)
+	}
 })

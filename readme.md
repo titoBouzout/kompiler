@@ -68,7 +68,11 @@ In package.json at the key `kompiler` you may use the following options
       }
     ],
     // legacy stuff, if you need a file from the web and you want to automatically update it this will do it. It checks at most 1 time per day and only if the compiler is running
-    "autoupdates": [["https://www.example.net/jquery@3", "client/js/jquery.js"]]
+    "autoupdates": [["https://www.example.net/jquery@3", "client/js/jquery.js"]],
+    // display git status automatically
+    "git": false,
+    // display package out of date automatically
+    "npm": false
   }
 }
 ```
