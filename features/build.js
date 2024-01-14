@@ -176,7 +176,7 @@ promise(async function build() {
 			}
 		}
 
-		const extensions = ['.js', '.ts', '.jsx', '.tsx']
+		const extensions = ['.jsx', '.tsx']
 
 		const isMulti = !/\/[^\/]+\.[^\/]+$/.test(build.output)
 
