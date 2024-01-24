@@ -260,7 +260,7 @@ promise(async function build() {
 					file: !isMulti ? build.output : undefined,
 					dir: isMulti ? build.output : undefined,
 					intro: function () {
-						return autorefresh
+						return build.root === undefined || build.root ? autorefresh : ''
 					},
 					sourcemap: true,
 					sourcemapExcludeSources: true,
