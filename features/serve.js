@@ -62,9 +62,10 @@ promise(async function serve() {
 						async function serve(file) {
 							let mimeType = mime.lookup(file)
 							res.setHeader('Content-Type', contentType(mimeType))
-							// res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-							// res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
-
+							if (build.highResolutionTime) {
+								res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+								res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
+							}
 							res.writeHead(200)
 							res.end(Buffer.from(await fs.promises.readFile(file)))
 						}
@@ -94,8 +95,6 @@ promise(async function serve() {
 										'</a>'
 
 								res.setHeader('Content-Type', 'text/html; charset=utf-8')
-								res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-								res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
 								res.writeHead(200)
 								res.end(content)
 							} else {

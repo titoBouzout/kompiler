@@ -14,7 +14,7 @@ In package.json at the key `kompiler` you may use the following options
   "kompiler": {
     // enviroment
     "env": {
-      "NODE_ENV": "development/production"
+      "NODE_ENV": "development/production",
     },
     // an array of "node scripts" to run, watch, and automatically restart
     "node": [
@@ -24,17 +24,17 @@ In package.json at the key `kompiler` you may use the following options
         // for old node versions, to use "esm" (require vs imports)
         "legacyToEs6": false, // defaults to false
         // in case you have a folder or file you want to watch that is outside "input" folder to restart the script. Useful for developing npm packages using "npm link"
-        "watch": []
-      }
+        "watch": [],
+      },
     ],
     // for all builds:
     "map": [
       // for mapping paths served by the static server for all builds
-      ["S:/www/aa/client/npm/package/", "S:/www/npm/package/"]
+      ["S:/www/aa/client/npm/package/", "S:/www/npm/package/"],
     ],
     // babel config for all builds
     "babel": {
-      "presets": ["solid"]
+      "presets": ["solid"],
     },
     // similar to node property is for running rollup, as many as you want
     "builds": [
@@ -50,6 +50,8 @@ In package.json at the key `kompiler` you may use the following options
         "express": false,
         // server document root, set to `false` to not start a static file server
         "root": "./",
+        // if to add high resolution time headers
+        "highResolutionTime": false,
         // for opening a special page when loading the server
         "page": "index.kompiler.html",
         "hostname": "localhost",
@@ -57,28 +59,22 @@ In package.json at the key `kompiler` you may use the following options
         "format": "iife",
         // babel config
         "babel": {
-          "presets": ["solid"]
+          "presets": ["solid"],
         },
         // in case you have a folder or file you want to watch that is outside "input" folder. Useful for developing npm packages using "npm link". It will trigger a rebuild and possible an update on the browser if anything changes
         "watch": [],
         // for mapping paths served by the static server
         "map": [["S:/www/aa/client/npm/package/", "S:/www/npm/package/"]],
         // rollup options, if any
-        "rollup": {}
-      }
+        "rollup": {},
+      },
     ],
     // legacy stuff, if you need a file from the web and you want to automatically update it this will do it. It checks at most 1 time per day and only if the compiler is running
     "autoupdates": [["https://www.example.net/jquery@3", "client/js/jquery.js"]],
     // display git status automatically
     "git": false,
     // display package out of date automatically
-    "npm": false
-  }
+    "npm": false,
+  },
 }
 ```
-
-## TODO
-
-- handle merge conflicts
-- npm versioning when publishing
-- set env production automatically?
