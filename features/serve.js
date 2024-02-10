@@ -179,13 +179,13 @@ promise(async function serve() {
 			build.on_bundle_done = async function () {
 				if (reload_js) {
 					reload_js = false
-					line('Auto Refresh - js changed, refreshing')
+					line('Auto Refresh - js changed, refreshing ' + page)
 					build.wss.clients.forEach(function (client) {
 						client.send('reload')
 					})
 				} else if (reload_css) {
 					reload_css = false
-					line('Auto Refresh - css changed, hot reloading')
+					line('Auto Refresh - css changed, hot reloading ' + page)
 					build.wss.clients.forEach(function (client) {
 						client.send('reload-css')
 					})
