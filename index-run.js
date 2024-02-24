@@ -19,6 +19,8 @@ process.on('message', async m => {
 	}
 })
 
+process.on('SIGHUP', () => process.exit())
+
 // lib
 
 require('./lib/@index.js')

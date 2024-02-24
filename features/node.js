@@ -38,6 +38,10 @@ promise(async function node() {
 			server = start()
 
 			process.on('exit', kill)
+			process.on('SIGHUP', () => {
+				kill()
+				process.exit()
+			})
 		}
 	}
 })

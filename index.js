@@ -33,7 +33,7 @@ async function restart(changed, action) {
 }
 
 // for closing the cmd window as soon as possible
-;['SIGTERM', 'SIGINT', 'SIGUSR2', 'SIGBREAK'].forEach(function (m) {
+;['SIGTERM', 'SIGINT', 'SIGUSR2', 'SIGBREAK', 'SIGHUP'].forEach(function (m) {
 	process.on(m, function () {
 		process.exit()
 	})
