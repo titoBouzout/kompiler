@@ -262,7 +262,7 @@ promise(async function build() {
 					intro: function () {
 						return build.root === undefined || build.root ? autorefresh : ''
 					},
-					sourcemap: true,
+					sourcemap: build.sourcemap === undefined ? true : build.sourcemap,
 					sourcemapExcludeSources: true,
 					format: isMulti ? 'es' : build.format || 'iife',
 					entryFileNames: `entry/[name].[ext]`,
