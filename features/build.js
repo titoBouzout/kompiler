@@ -250,6 +250,7 @@ promise(async function build() {
 				// module interoperability
 				commonjs({
 					exclude: './node_modules/**',
+					requireReturnsDefault: 'auto', // <---- this solves default issue
 				}),
 				jsonimport(),
 				build.minified || !__IS_LOCALHOST__ ? terser() : null,
