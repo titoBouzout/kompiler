@@ -249,7 +249,7 @@ promise(async function build() {
 				// this is needed for component that arent es6
 				// module interoperability
 				commonjs({
-					exclude: './node_modules/**',
+					/*exclude: './node_modules/**',*/
 					requireReturnsDefault: 'auto', // <---- this solves default issue
 				}),
 				jsonimport(),
@@ -275,7 +275,7 @@ promise(async function build() {
 			onwarn: function (event) {
 				switch (event.code) {
 					case 'xxxx':
-					// case 'CIRCULAR_DEPENDENCY':
+					case 'CIRCULAR_DEPENDENCY':
 					case 'EMPTY_BUNDLE':
 					case 'FILE_NAME_CONFLICT':
 					case 'MISSING_NAME_OPTION_FOR_IIFE_EXPORT':
