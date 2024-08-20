@@ -229,11 +229,11 @@ promise(async function build() {
 					// IT BREAKS SOURCEMAPS! preserveSymlinks: true,
 				}),
 				css({
-					modules: build.cssModules === false ? false : true,
 					plugins: [cssimports()],
 					extract: true,
 					minimize: true,
 					sourceMap: true,
+					autoModules: true,
 				}),
 				babel({
 					// cwd: project,
