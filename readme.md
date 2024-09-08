@@ -12,6 +12,8 @@ In package.json at the key `kompiler` you may use the following options
 
 {
   "kompiler": {
+    // restart the whole thing when something changes, for babel plugins that change
+    "watch": [],
     // enviroment
     "env": {
       "NODE_ENV": "development/production",

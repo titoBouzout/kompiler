@@ -18,7 +18,15 @@ remove(project + 'norestart')
 
 watch(null, compiler, restart)
 exists(json).then(function (result) {
-	if (result) watch(null, json, restart)
+	if (result) {
+		watch(null, json, restart)
+		const restarting = require(json).kompiler?.watch
+		if (restarting) {
+			for (const item of restarting) {
+				watch(null, normalize(project + item), restart)
+			}
+		}
+	}
 })
 
 // restarts
