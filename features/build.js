@@ -264,7 +264,7 @@ promise(async function build() {
 						return build.root === undefined || build.root ? autorefresh : ''
 					},
 					sourcemap: build.sourcemap === undefined ? true : build.sourcemap,
-					sourcemapExcludeSources: true,
+					sourcemapExcludeSources: false,
 					format: isMulti ? 'es' : build.format || 'iife',
 					entryFileNames: `entry/[name].[ext]`,
 					chunkFileNames: `chunk/[name].js`,
@@ -291,13 +291,23 @@ promise(async function build() {
 		})
 
 		let refreshTimeout = false
-		watcher.on('event', function (event) {
+		watcher.on('event', async function (event) {
 			switch (event.code) {
 				case 'START':
 					clearTimeout(refreshTimeout)
 					clearTimeout(refreshTimeoutAll)
 					break
 				case 'BUNDLE_START':
+					if (await exists(root + 'release.js')) {
+						const text = await read(root + 'release.js')
+						const url = 'data:text/javascript,' + encodeURIComponent(text)
+
+						import(url).then(m => {
+							if (m.pre) {
+								m.pre()
+							}
+						})
+					}
 					break
 				case 'BUNDLE_END':
 					errored = ''
@@ -310,6 +320,17 @@ promise(async function build() {
 							's',
 					)
 					event.result.close()
+
+					if (await exists(root + 'release.js')) {
+						const text = await read(root + 'release.js')
+						const url = 'data:text/javascript,' + encodeURIComponent(text)
+
+						import(url).then(m => {
+							if (m.post) {
+								m.post()
+							}
+						})
+					}
 					break
 				case 'ERROR':
 					on_error(event.error)
