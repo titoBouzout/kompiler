@@ -209,6 +209,23 @@ promise(async function build() {
 					preventAssignment: true,
 					delimiters: ['', ''],
 				}),
+				{
+					name: 'raw',
+					async resolveId(file, importer) {
+						if (/\?raw$/.test(file)) {
+							return path.resolve(dirname(importer), file)
+						}
+					},
+					async load(file) {
+						if (/\?raw$/.test(file)) {
+							return (
+								'export default `' +
+								(await read(file.replace(/\?raw$/, ''))).replace(/`/g, '\\`') +
+								'`'
+							)
+						}
+					},
+				},
 				alias({
 					entries: aliases,
 				}),
