@@ -218,11 +218,10 @@ promise(async function build() {
 					},
 					async load(file) {
 						if (/\?raw$/.test(file)) {
-							return (
-								'export default `' +
-								(await read(file.replace(/\?raw$/, ''))).replace(/`/g, '\\`') +
-								'`'
-							)
+							file = file.replace(/\?raw$/, '')
+							this.addWatchFile(file)
+
+							return 'export default `' + (await read(file)).replace(/`/g, '\\`') + '`'
 						}
 					},
 				},
@@ -240,8 +239,6 @@ promise(async function build() {
 					browser: true,
 					modulePaths: modules,
 					rootDir: root,
-					// dedupe: ['solid'],
-					// 	exportConditions: ['solid'],
 					extensions,
 					// IT BREAKS SOURCEMAPS! preserveSymlinks: true,
 				}),
@@ -254,7 +251,6 @@ promise(async function build() {
 				}),
 				babel({
 					// cwd: project,
-
 					// cwd: project ,
 					// exclude: 'node_modules/**',
 					// include: ['./*'],
