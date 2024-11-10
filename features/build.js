@@ -294,6 +294,12 @@ promise(async function build() {
 					case 'MISSING_NAME_OPTION_FOR_IIFE_EXPORT':
 					case 'UNUSED_EXTERNAL_IMPORT':
 						break
+					case 'UNRESOLVED_IMPORT': {
+						if (event.message.startsWith('"http')) {
+							break
+						}
+						on_error(event)
+					}
 					default: {
 						on_error(event)
 					}
