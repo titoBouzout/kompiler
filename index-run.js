@@ -53,8 +53,8 @@ require('./lib/watch.js')
 // options
 
 require('./lib/options.js').then(function () {
-	let shortcuts =
-		' [1] Diff - [2] Browser - [3] Publish - [Type + Enter] Commit - [ENTER] Pull/Push'
+	let shortcuts = '[1] Diff - [2] Browser'
+	console.log()
 	let s = 'kompiler - ' + (options.name ? options.name + ' - ' + project : project)
 
 	title(s)
@@ -64,6 +64,7 @@ require('./lib/options.js').then(function () {
 	}, 1000)
 
 	yellow(shortcuts)
+	console.log()
 
 	// features
 
@@ -72,8 +73,7 @@ require('./lib/options.js').then(function () {
 	require('./features/node.js')
 	require('./features/autoupdate.js')
 
-	require('./features/git-status.js')
-	require('./features/npm.js')
+	require('./features/git.js')
 
-	require('./features/publish.js')
+	require('./features/actions.js')
 })

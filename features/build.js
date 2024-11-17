@@ -1,5 +1,3 @@
-on_bundle_done_notification = () => {}
-__IS_LOCALHOST__ = true
 promise(async function build() {
 	if (!(await exists(project + 'package.json'))) {
 		return
@@ -15,7 +13,6 @@ promise(async function build() {
 		require('@rollup/plugin-node-resolve')
 	const alias = require('@rollup/plugin-alias').default || require('@rollup/plugin-alias')
 	const multi = require('@rollup/plugin-multi-entry')
-	const replace = require('@rollup/plugin-replace')
 	const babel = require('@rollup/plugin-babel').default || require('@rollup/plugin-babel')
 
 	const terser = require('@rollup/plugin-terser')
@@ -187,28 +184,6 @@ promise(async function build() {
 			treeshake: build.treeshake === undefined ? 'recommended' : build.treeshake,
 			// IT BREAKS SOURCEMAPS! preserveSymlinks: true,
 			plugins: [
-				replace({
-					values: {
-						'process.env.NODE_ENV': () =>
-							build.minified || !__IS_LOCALHOST__
-								? JSON.stringify('production')
-								: JSON.stringify('development'),
-						'"_DX_DEV_"': () =>
-							build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
-						"'_DX_DEV_'": () =>
-							build.minified || !__IS_LOCALHOST__ ? false : '"_DX_DEV_"',
-						'"__DEV__"': () =>
-							build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
-						"'__DEV__'": () =>
-							build.minified || !__IS_LOCALHOST__ ? false : '"__DEV__"',
-						"'__IS_LOCALHOST__'": !build.minified ? true : false,
-						'"__IS_LOCALHOST__"': !build.minified ? true : false,
-						__DATE__: () => Date.now(),
-						__VERSION__: () => JSON.parse(read_sync(project + 'package.json')).version,
-					},
-					preventAssignment: true,
-					delimiters: ['', ''],
-				}),
 				{
 					name: 'raw',
 					async resolveId(file, importer) {
@@ -266,7 +241,7 @@ promise(async function build() {
 					requireReturnsDefault: 'auto', // <---- this solves default issue
 				}),
 				jsonimport(),
-				build.minified || !__IS_LOCALHOST__ ? terser() : null,
+				build.minified ? terser() : null,
 			],
 			context: 'window',
 			output: [
@@ -278,7 +253,7 @@ promise(async function build() {
 					},
 					sourcemap: build.sourcemap === undefined ? true : build.sourcemap,
 					sourcemapExcludeSources: false,
-					format: isMulti ? 'es' : build.format || 'iife',
+					format: isMulti ? 'es' : 'iife',
 					entryFileNames: `entry/[name].[ext]`,
 					chunkFileNames: `chunk/[name].js`,
 					assetFileNames: `asset/[name].[ext]`,
@@ -338,8 +313,8 @@ promise(async function build() {
 							fixed(event.duration / 1000) +
 							's',
 					)
-					event.result.close()
 
+					event.result.close()
 					if (await exists(root + 'release.js')) {
 						const text = await read(root + 'release.js')
 						const url = 'data:text/javascript,' + encodeURIComponent(text)
@@ -350,17 +325,37 @@ promise(async function build() {
 							}
 						})
 					}
+
+					// write version to index
+
+					if (await exists(root + '/index.html')) {
+						let index = await read(root + '/index.html')
+
+						const outputFiles = [event.output]
+							.flat(Infinity)
+							.map(async x => await hash_file(x))
+
+						const version = await hash((await Promise.all(outputFiles)).join('')).slice(
+							0,
+							8,
+						)
+
+						await write(
+							root + '/index.html',
+							index
+								.replace(/\.js\?[^"']+/g, '.js?' + version)
+								.replace(/\.css\?[^"']+/g, '.css?' + version),
+						)
+					}
 					break
 				case 'ERROR':
 					on_error(event.error)
 					break
 				case 'END':
 					clearTimeout(refreshTimeout)
-					clearTimeout(refreshTimeoutAll)
 					refreshTimeout = setTimeout(() => {
 						if (build.on_bundle_done) build.on_bundle_done()
 					}, 100)
-					refreshTimeoutAll = setTimeout(on_bundle_done_notification, 100)
 					break
 			}
 		})

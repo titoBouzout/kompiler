@@ -62,10 +62,6 @@ promise(async function serve() {
 						async function serve(file) {
 							let mimeType = mime.lookup(file)
 							res.setHeader('Content-Type', contentType(mimeType))
-							if (build.highResolutionTime) {
-								res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-								res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
-							}
 							res.setHeader('Access-Control-Allow-Origin', '*')
 							res.setHeader('Access-Control-Allow-Credentials', 'true')
 

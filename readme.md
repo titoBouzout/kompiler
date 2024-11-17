@@ -23,8 +23,7 @@ In package.json at the key `kompiler` you may use the following options
       {
         // the dirname of "input" is automatically watched for restarting the node script
         "input": "socket/index.js",
-        // for old node versions, to use "esm" (require vs imports)
-        "legacyToEs6": false, // defaults to false
+
         // in case you have a folder or file you want to watch that is outside "input" folder to restart the script. Useful for developing npm packages using "npm link"
         "watch": [],
       },
@@ -52,13 +51,10 @@ In package.json at the key `kompiler` you may use the following options
         "express": false,
         // server document root, set to `false` to not start a static file server
         "root": "./",
-        // if to add high resolution time headers
-        "highResolutionTime": false,
+
         // for opening a special page when loading the server
-        "page": "index.kompiler.html",
+        "page": "index.html",
         "hostname": "localhost",
-        // "iife" || "es" output format, defaults to iife, if multi entry is used defaults to es
-        "format": "iife",
         // babel config
         "babel": {
           "presets": ["solid"],
@@ -73,10 +69,6 @@ In package.json at the key `kompiler` you may use the following options
     ],
     // legacy stuff, if you need a file from the web and you want to automatically update it this will do it. It checks at most 1 time per day and only if the compiler is running
     "autoupdates": [["https://www.example.net/jquery@3", "client/js/jquery.js"]],
-    // display git status automatically
-    "git": false,
-    // display package out of date automatically
-    "npm": false,
   },
 }
 ```

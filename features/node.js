@@ -8,9 +8,7 @@ promise(async function node() {
 			subtitle('Starting Node script - ' + node.input)
 
 			function start() {
-				let command = node.legacyToEs6
-					? ['-r', project + 'node_modules/esm/index.js', node.input]
-					: [node.input]
+				let command = [node.input]
 				return spawn('node', command, { stdio: 'inherit' })
 			}
 
