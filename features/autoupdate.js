@@ -24,6 +24,7 @@ promise(async function autoupdates() {
 								log('Auto Library Update - no updates for ' + basename(file))
 							}
 						})
+						.catch(() => {})
 				})
 			}
 		}
