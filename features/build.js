@@ -232,6 +232,7 @@ promise(async function build() {
 					compact: false,
 					extensions,
 					babelHelpers: 'bundled',
+					generatorOpts: { importAttributesKeyword: 'with' },
 					...babel_options,
 				}),
 				// this is needed for component that arent es6
@@ -257,6 +258,7 @@ promise(async function build() {
 					entryFileNames: `entry/[name].[ext]`,
 					chunkFileNames: `chunk/[name].js`,
 					assetFileNames: `asset/[name].[ext]`,
+					importAttributesKey: 'with',
 				},
 			],
 
