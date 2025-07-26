@@ -4,6 +4,9 @@
 	"bin": {
 		"kompiler": "./index.js"
 	},
+	"exports": {
+		"./autoreload": "./lib/autoreload-client.js"
+	},
 	"dependencies": {
 		"@babel/core": "^7.26.0",
 		"@rollup/plugin-alias": "^5.1.1",

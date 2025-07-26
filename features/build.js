@@ -22,8 +22,6 @@ promise(async function build() {
 	const cssimports = require('postcss-import')
 	const jsonimport = require('@rollup/plugin-json')
 
-	const autorefresh = await read(compiler + 'lib/autoreload-client.js')
-
 	let consoleFormatting =
 		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g
 
@@ -249,15 +247,20 @@ promise(async function build() {
 				{
 					file: !isMulti ? build.output : undefined,
 					dir: isMulti ? build.output : undefined,
-					intro: function () {
-						return build.root === undefined || build.root ? autorefresh : ''
-					},
 					sourcemap: build.sourcemap === undefined ? true : build.sourcemap,
 					sourcemapExcludeSources: false,
 					format: isMulti ? 'es' : 'iife',
 					entryFileNames: `entry/[name].[ext]`,
-					chunkFileNames: `chunk/[name].js`,
-					assetFileNames: `asset/[name].[ext]`,
+					assetFileNames: `asset/[name].js`,
+					chunkFileNames(chunkInfo) {
+						const modulePath = chunkInfo.moduleIds[0] || ''
+						if (!modulePath || !modulePath.startsWith(root)) {
+							return 'chunk/[name]-[hash].js'
+						}
+
+						const dir = modulePath.replace(root, '').replace(/\/[^/]+\.[a-z]+$/, '')
+						return `src/${dir}/[name].js`
+					},
 					importAttributesKey: 'with',
 				},
 			],
