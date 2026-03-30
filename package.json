@@ -1,6 +1,6 @@
 {
 	"name": "kompiler",
-	"version": "7.0.168",
+	"version": "7.0.169",
 	"bin": {
 		"kompiler": "./index.js"
 	},
@@ -8,24 +8,24 @@
 		"./autoreload": "./lib/autoreload-client.js"
 	},
 	"dependencies": {
-		"@babel/core": "^7.26.0",
+		"@babel/core": "^7.29.0",
 		"@rollup/plugin-alias": "^5.1.1",
-		"@rollup/plugin-babel": "^6.0.4",
-		"@rollup/plugin-commonjs": "^28.0.1",
+		"@rollup/plugin-babel": "^7.0.0",
+		"@rollup/plugin-commonjs": "^29.0.2",
 		"@rollup/plugin-json": "^6.1.0",
-		"@rollup/plugin-multi-entry": "^6.0.1",
-		"@rollup/plugin-node-resolve": "^15.3.0",
-		"@rollup/plugin-terser": "^0.4.4",
-		"chokidar": "^3.6.0",
-		"express": "^4.21.1",
+		"@rollup/plugin-multi-entry": "^7.1.0",
+		"@rollup/plugin-node-resolve": "^16.0.3",
+		"@rollup/plugin-terser": "^1.0.0",
+		"chokidar": "^5.0.0",
+		"express": "^5.2.1",
 		"glob": "^9.3.5",
-		"mime-types": "^2.1.35",
-		"postcss": "^8.4.49",
-		"postcss-import": "^16.1.0",
+		"mime-types": "^3.0.2",
+		"postcss": "^8.5.8",
+		"postcss-import": "^16.1.1",
 		"prompt-sync": "^4.2.0",
-		"rollup": "^4.27.2",
+		"rollup": "^4.60.0",
 		"rollup-plugin-postcss": "^4.0.2",
-		"ws": "^8.18.0"
+		"ws": "^8.20.0"
 	},
 	"prettier": {
 		"printWidth": 90,

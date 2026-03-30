@@ -73,6 +73,8 @@ promise(async function build() {
 					frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
 				})
 			} else {
+				console.log(event)
+
 				errored = JSON.stringify({
 					error: (event.message || '').replace(consoleFormatting, '') || undefined,
 					frame: (event.frame || '').replace(consoleFormatting, '') || undefined,
@@ -230,7 +232,10 @@ promise(async function build() {
 					compact: false,
 					extensions,
 					babelHelpers: 'bundled',
-					generatorOpts: { importAttributesKeyword: 'with' },
+					generatorOpts: {
+						importAttributesKeyword: 'with',
+						jsescOption: { minimal: true },
+					},
 					...babel_options,
 				}),
 				// this is needed for component that arent es6
